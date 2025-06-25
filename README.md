@@ -5,6 +5,11 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/951ddffb-b337-41b3-b453-93fe7bb0f319/deploy-status)](https://app.netlify.com/sites/mindmoor/deploys) 
 
 A holistic web platform for mental wellness featuring mood tracking, therapeutic exercises, and AI-powered support.
+
+## Etymology & Design Intent  
+- **MindMoor**: Combines "mind" + "moor" (Old English *mōr*), reflecting the app’s focus on creating mental space. MindMoor symbolizes an uncultivated, open landscape - reflecting the app's goal to help users declutter mental noise and find calm  
+- **Moira**: Chosen for its mythological roots in agency (weaving one’s path) versus passive "fate." Moira embodies the idea of guided self-discovery and acts as a supportive, non-judgemental entity that helps users to navigate their mental journey with personalized coping strategies. 
+
 ## ✨ Key Features
 
 ### 🧠 Core Functionality
@@ -96,11 +101,6 @@ cd mindmoor
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## Etymology & Design Intent  
-- **MindMoor**: Combines "mind" + "moor" (Old English *mōr*), reflecting the app’s focus on creating mental space.  
-- **Moira**: Chosen for its mythological roots in agency (weaving one’s path) versus passive "fate."  
-
 
 ## 🙏 Acknowledgments
 
