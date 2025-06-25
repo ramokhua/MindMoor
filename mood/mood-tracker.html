@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMoor - Mood Tracker</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            margin: 1rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-home svg {
+            margin-right: 8px;
+        }
+        .mood-tracker-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+      <header>
+        <nav>
+            <div class="logo-container">
+                <img src="../logo-transparent.png" alt="MindMoor Logo" class="logo" width="150">
+                <div class="logo-text">
+                    <span class="logoname">MindMoor</span>
+                    <span class="slogan">Anchor Your Thoughts, Steady Your Soul</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Back to home</a></li>
+            </ul>
+        </nav>
+      </header>
+
+    <main class="mood-tracker-container">
+        <h1>Mood Tracker</h1>
+        <p>Track your emotional patterns to better understand your mental health journey.</p>
+        
+        <div class="mood-tracker">
+            <h2>How are you feeling today?</h2>
+            <div class="moods">
+                <button data-mood="happy">😊 Happy</button>
+                <button data-mood="sad">😢 Sad</button>
+                <button data-mood="angry">😠 Angry</button>
+                <button data-mood="anxious">😰 Anxious</button>
+                <button data-mood="confused">😕 Confused</button>
+                <button data-mood="clueless">🤷🏼 Not Sure</button>
+            </div>
+            <div id="mood-result"></div>
+            <canvas id="mood-chart"></canvas>
+        </div>
+        
+        <div class="mood-tips">
+            <h3>Understanding Your Mood Patterns</h3>
+            <p>Tracking your mood regularly can help you:</p>
+            <ul>
+                <li>Identify triggers for different emotional states</li>
+                <li>Recognize improvements over time</li>
+                <li>Communicate more effectively with healthcare providers</li>
+                <li>Develop better coping strategies</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 MindMoor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../script.js"></script>
+</body>
+</html>
