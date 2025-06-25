@@ -97,6 +97,10 @@ cd mindmoor
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+## Etymology & Design Intent  
+- **MindMoor**: Combines "mind" + "moor" (Old English *mōr*), reflecting the app’s focus on creating mental space.  
+- **Moira**: Chosen for its mythological roots in agency (weaving one’s path) versus passive "fate."  
+
 
 ## 🙏 Acknowledgments
 
