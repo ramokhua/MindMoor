@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MindMoor - Free Therapy Tools</title>
+        <link rel="stylesheet" href="../style.css">
+        <style>
+            .exercise {
+                background: white;
+                border-radius: 15px;
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            ol, ul {
+                padding-left: 1.5rem;
+                margin: 1rem 0;
+            }
+            li {
+                margin-bottom: 0.5rem;
+            }
+            .download-link {
+                display: block;
+                margin-top: 1rem;
+                color: #5d93a6;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+          <header>
+            <nav>
+                <div class="logo-container">
+                    <img src="../logo-transparent.png" alt="MindMoor Logo" class="logo" width="150">
+                    <div class="logo-text">
+                        <span class="logoname">MindMoor</span>
+                        <span class="slogan">Anchor Your Thoughts, Steady Your Soul</span>
+                    </div>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html">Back to home</a></li>
+                </ul>
+            </nav>
+          </header>
+    
+        <section class="therapy-tools" style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+           <h1 style="margin-bottom: 1.5rem;">5-4-3-2-1 Grounding Technique</h2>
+         <div class="exercise">
+            <p>For anxiety and panic attacks:</p>
+    
+            <div vlass="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>    
+            </div>
+            <div class="timer-display" id="timer">Time : 0:00</div>
+            
+            <div class="grounding-container">
+                <div class="grounding-exercise">
+                    <div class="grounding-step active" id="step-5">
+                        <h3>5 Things You Can See</h3>
+                        <div class="grounding-inputs">
+                            <input type="text" placeholder="Item 1" data-step="5">
+                            <input type="text" placeholder="Item 2" data-step="5">
+                            <input type="text" placeholder="Item 3" data-step="5">
+                            <input type="text" placeholder="Item 4" data-step="5">
+                            <input type="text" placeholder="Item 5" data-step="5">
+                        </div>
+                        <div class="grounding-controls">
+                            <button id="prev-step" disabled>Previous</button>
+                            <span class="step-counter">Step 1 of 5</span>
+                            <button id="next-step">Next</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grounding-step" id="step-4">
+                        <h3>4 Things You Can Touch</h3>
+                        <div class="grounding-inputs">
+                            <input type="text" placeholder="Item 1" data-step="4">
+                            <input type="text" placeholder="Item 2" data-step="4">
+                            <input type="text" placeholder="Item 3" data-step="4">
+                            <input type="text" placeholder="Item 4" data-step="4">
+                        </div>
+                        <div class="grounding-controls">
+                            <button id="prev-step">Previous</button>
+                            <span class="step-counter">Step 2 of 5</span>
+                            <button id="next-step">Next</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grounding-step" id="step-3">
+                        <h3>3 Things You Can Hear</h3>
+                        <div class="grounding-inputs">
+                            <input type="text" placeholder="Sound 1" data-step="3">
+                            <input type="text" placeholder="Sound 2" data-step="3">
+                            <input type="text" placeholder="Sound 3" data-step="3">
+                        </div>
+                        <div class="grounding-controls">
+                            <button id="prev-step">Previous</button>
+                            <span class="step-counter">Step 3 of 5</span>
+                            <button id="next-step">Next</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grounding-step" id="step-2">
+                        <h3>2 Things You Can Smell</h3>
+                        <div class="grounding-inputs">
+                            <input type="text" placeholder="Scent 1" data-step="2">
+                            <input type="text" placeholder="Scent 2" data-step="2">
+                        </div>
+                        <div class="grounding-controls">
+                            <button id="prev-step">Previous</button>
+                            <span class="step-counter">Step 4 of 5</span>
+                            <button id="next-step">Next</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grounding-step" id="step-1">
+                        <h3>1 Thing You Can Taste</h3>
+                        <div class="grounding-inputs">
+                            <input type="text" placeholder="Taste" data-step="1">
+                        </div>
+                        <div class="grounding-controls">
+                            <button id="prev-step">Previous</button>
+                            <span class="step-counter">Step 5 of 5</span>
+                            <button id="next-step">Complete</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grounding-step" id="completion-message">
+                        <p class="completion-message">You've completed the exercise! How do you feel now?</p>
+                        <div class="saved-data" id="saved-data"></div>
+                        <div class="grounding-controls">
+                            <button id="start-over">Start Over</button>
+                            <button id="view-data">View My responses</button>
+                            <button id="next-step">
+                                <a href="../mood/mood-tracker.html">Log your mood here!</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+        </section>
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 MindMoor. All rights reserved.</p>
+                <p>For crisis support, please contact your local helpline.</p>
+            </div>
+        </footer>
+        <script src="gt-script.js"></script>
+    </body>
+</html>

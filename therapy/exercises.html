@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMoor - Free Therapy Tools</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .exercise {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        ol, ul {
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .download-link {
+            display: block;
+            margin-top: 1rem;
+            color: #5d93a6;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+      <header>
+        <nav>
+            <div class="logo-container">
+                <img src="../logo-transparent.png" alt="MindMoor Logo" class="logo" width="150">
+                <div class="logo-text">
+                    <span class="logoname">MindMoor</span>
+                    <span class="slogan">Anchor Your Thoughts, Steady Your Soul</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Back to home</a></li>
+            </ul>
+        </nav>
+      </header>
+
+    <section class="therapy-tools" style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+        <h1 style="margin-bottom: 1.5rem;">Free Therapy Exercises</h1>
+        
+        <div class="exercise">
+            <h2>Thought Record Worksheet</h2>
+            <p>Challenge negative thinking patterns:</p>
+            <ol>
+                <li>Situation (what happened?)</li>
+                <li>Automatic thoughts</li>
+                <li>Evidence for/against</li>
+                <li>Alternative perspective</li>
+            </ol>
+            <button class="start-exercise" 
+                    onclick="window.open('../diary/journal.html', '_blank')">
+                Start Journaling
+            </button>
+        </div>
+
+ <div class="exercise">
+    <h2>5-4-3-2-1 Grounding Technique</h2>
+    <p>For anxiety and panic attacks:</p>
+     <button class="start-exercise" 
+            onclick="window.open('grounding-technique.html', '_blank')">
+        Take Exercise
+    </button>
+ </div>
+
+        <div class="exercise">
+            <h2>Mindfulness Meditation</h2>
+            <p>Free guided audio resources:</p>
+            <a href="https://www.mindful.org/free-mindfulness-resources/" 
+               target="_blank" 
+               class="download-link">
+                Access Free Meditations
+            </a>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 MindMoor. All rights reserved.</p>
+            <p>For crisis support, please contact your local helpline.</p>
+        </div>
+    </footer>
+</body>
+</html>
