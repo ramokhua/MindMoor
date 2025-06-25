@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MindMoor - Mental Wellness</title>
+        <link rel="stylesheet" href="style.css">
+        <style>
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+                margin: 3rem auto;
+                max-width: 1200px;
+            }
+            
+            .feature-card {
+                background: white;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                transition: transform 0.3s;
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-5px);
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+                color: var(--primary);
+            }
+            
+            .about-section {
+                max-width: 800px;
+                margin: 3rem auto;
+                padding: 0 2rem;
+                text-align: center;
+            }
+            
+            .testimonial {
+                background: white;
+                padding: 2rem;
+                border-radius: 15px;
+                margin: 2rem 0;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="logo-container">
+                    <img src="logo-transparent.png" alt="MindMoor Logo" class="logo" width="150">
+                    <div class="logo-text">
+                        <span class="logoname">MindMoor</span>
+                        <span class="slogan">Anchor Your Thoughts, Steady Your Soul</span>
+                    </div>
+                </div>
+                <button class="menu-toggle">☰</button>
+                <ul class="nav-menu">
+                    <li><a href="mood/mood-tracker.html">Mood Tracker</a></li>
+                    <li><a href="diary/journal.html">Journal</a></li>
+                    <li><a href="breathing/breathing.html">Breathing Exercises</a></li>
+                    <li><a href="therapy/exercises.html">Therapy Exercises</a></li>
+                    <li><a href="books/cbt.html">Self-Help Resources</a></li>
+                    <li><a href="moira-chatbot/moira.html">Chat with Moira</a></li>
+                </ul>
+            </nav>
+        </header>
+    
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Your Safe Harbor for Mental Wellness</h1>
+                <p>Discover tools and resources to support your mental health journey</p>
+                <a href="mood/mood-tracker.html" class="cta">Start Your Journey</a>
+            </div>
+        </section>
+    
+        <section class="about-section">
+            <h2>About MindMoor</h2>
+            <p>MindMoor is a comprehensive mental wellness platform designed to help you navigate life's 
+                challenges with science-backed tools. Our mission is to make mental health support accessible, 
+                intuitive, and effective for everyone.</p>
+        </section>
+    
+        <section class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Mood Tracking</h3>
+                <p>Identify patterns in your emotional wellbeing with our intuitive mood tracker. Visualize your 
+                    progress over time and gain insights into your mental health patterns.</p>
+                <a href="mood/mood-tracker.html" class="btn">Try Mood Tracker</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Digital Journal</h3>
+                <p>Express your thoughts freely in your private journal. Our secure platform helps you reflect on
+                    your experiences and track personal growth over time.</p>
+                <a href="diary/journal.html" class="btn">Start Journaling</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌬️</div>
+                <h3>Breathing Exercises</h3>
+                <p>Reduce stress and anxiety with guided breathing techniques. Choose from different patterns to find 
+                    what works best for you in moments of need.</p>
+                <a href="breathing/breathing.html" class="btn">Practice Breathing</a>
+            </div>
+    
+            <div class="feature-card">
+                <div class="feature-icon">🧘‍♂️</div>
+                <h3>Therapy Exercises</h3>
+                <p>Practical tools to manage anxiety, stress, and negative thought patterns.</p>
+                <a href="therapy/exercises.html" class="btn">Explore Exercises</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Mental Health Resources</h3>
+                <p>Access free CBT workbooks, therapy exercises, and educational materials to support your mental health
+                    journey at your own pace.</p>
+                <a href="books/cbt.html" class="btn">Explore Resources</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Chat with Moira</h3>
+                <p>Our compassionate AI companion Moira is here to listen and offer support whenever you need someone 
+                    to talk to, available 24/7.</p>
+                <a href="moira-chatbot/moira.html" class="btn">Talk to Moira</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Private & Secure</h3>
+                <p>Your data stays with you. We don't sell or share your information, and all your entries are encrypted 
+                    for maximum privacy.</p>
+                <a href="#privacy" class="btn">Learn More</a>
+            </div>
+        </section>
+
+        <section class ="features-grid">
+            <div class="feature-card">
+                <h2>Why Choose MindMoor?</h2>
+                <div class="testimonial">
+                    <p>"MindMoor helped me recognize patterns in my mood swings that I never noticed before. The journal feature
+                        became my daily mental health check-in."</p>
+                    <p>- Sarah K., regular user since 2025</p>
+                </div>
+
+                <div class="testimonial">
+                    <p>"Using MindMoor's breathing exercises has truly helped me manage my daily stress and anxiety. The resources are easy to access and incredibly supportive."</p>
+                    <p>- Michael T., MindMoor user</p>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h2>Features</h2>
+                <div class="testimonial">
+                    <div class="features">
+                        <h3>Science-Backed Tools</h3>
+                        <p>All our features are based on proven therapeutic techniques like Cognitive Behavioral Therapy (CBT) 
+                            and mindfulness practices.</p>
+                    </div>
+                    
+                    <div class ="features">
+                        <h3>Accessible Anywhere</h3>
+                        <p>Use MindMoor on any device, anytime you need support. Your data syncs securely across all your devices.</p>
+                    </div>
+            
+                    <div class ="features">
+                        <h3>Completely Free</h3>
+                        <p>We believe mental health support should be accessible to everyone, so we offer all our core features at no cost.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 MindMoor. All rights reserved.</p>
+                <p>For crisis support, please contact your local helpline.</p>
+            </div>
+        </footer>
+        
+        <script src="script.js"></script>
+    </body>
+</html>
