@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MindMoor - Journal</title>
+        <link rel="stylesheet" href="../style.css">
+        <style>
+            /* Journal Container */
+            #journal-form {
+                margin-bottom: 2rem;
+            }
+            
+            /* Textarea Styling */
+            #journal-text {
+                width: 100%;
+                min-height: 150px;
+                padding: 1rem;
+                border: 2px solid var(--secondary);
+                border-radius: 8px;
+                font-family: inherit;
+                font-size: 1rem;
+                resize: vertical;
+                transition: border-color 0.3s;
+                margin-bottom: 1rem;
+            }
+            
+            #journal-text:focus {
+                border-color: var(--primary);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(93, 147, 166, 0.2);
+            }
+            
+            /* Entries Container */
+            #journal-entries {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            /* Individual Entry */
+            .journal-entry {
+                background: white;
+                padding: 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                position: relative;
+                border-left: 4px solid var(--primary);
+            }
+            
+            .journal-entry small {
+                display: block;
+                color: var(--primary);
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+            
+            .journal-entry p {
+                white-space: pre-wrap;
+                margin: 0;
+                line-height: 1.6;
+            }
+                    form-actions {
+                display: flex;
+                gap: 1rem;
+            }
+            
+            #save-entry, #clear-form {
+                flex: 1;
+                padding: 0.8rem;
+                font-size: 1rem;
+            }
+            
+            #save-entry {
+                background-color: var(--primary);
+                color: white;
+            }
+            
+            #clear-form {
+                background-color: #f0f0f0;
+                color: var(--dark);
+            }
+            
+            /* Delete Button */
+            .delete-entry {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: none;
+                border: none;
+                color: #e74c3c;
+                cursor: pointer;
+                font-size: 0.9rem;
+                padding: 0.2rem 0.5rem;
+                border-radius: 4px;
+                transition: background-color 0.2s;
+            }
+            
+            .delete-entry:hover {
+                background-color: rgba(231, 76, 60, 0.1);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="logo-container">
+                    <img src="../logo-transparent.png" alt="MindMoor Logo" class="logo" width="150">
+                    <div class="logo-text">
+                        <span class="logoname">MindMoor</span>
+                        <span class="slogan">Anchor Your Thoughts, Steady Your Soul</span>
+                    </div>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="../index.html">Back to home</a></li>
+                </ul>
+            </nav>
+        </header>
+    
+        <main>
+          <section class="journal">
+                <h1>Journal</h1>
+                <form id="journal-form">
+                    <textarea 
+                        id="journal-text" 
+                        placeholder="Write your thoughts here..."
+                        required
+                    ></textarea>
+                    <div class="form-actions">
+                        <button type="submit" id="save-entry">Save Entry</button>
+                        <button type="button" id="clear-form">Clear</button>
+                    </div>
+                </form>
+                <div id="journal-entries"></div>
+          </section>
+        </main>
+    
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 MindMoor. All rights reserved.</p>
+                <p>For crisis support, please contact your local helpline.</p>
+            </div>
+        </footer>
+    
+        <script>
+            // Journal System
+            const journal = {
+                entries: JSON.parse(localStorage.getItem('journal')) || [],
+                
+                saveEntry: function(text) {
+                    if (!text.trim()) return;
+                    
+                    const newEntry = {
+                        id: Date.now(),
+                        date: new Date().toISOString(),
+                        text: text
+                    };
+                    
+                    this.entries.unshift(newEntry);
+                    localStorage.setItem('journal', JSON.stringify(this.entries));
+                    this.displayEntries();
+                },
+                
+                displayEntries: function() {
+                    const container = document.getElementById('journal-entries');
+                    if (!container) return;
+                    
+                    container.innerHTML = this.entries.map(entry => `
+                        <div class="journal-entry" data-id="${entry.id}">
+                            <small>${new Date(entry.date).toLocaleString()}</small>
+                            <button class="delete-entry" data-id="${entry.id}">Delete ✕</button>
+                            <p>${entry.text.replace(/\n/g, '<br>')}</p>
+                        </div>
+                    `).join('');
+                    
+                    // Add delete handlers
+                    document.querySelectorAll('.delete-entry').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = Number(e.target.dataset.id);
+                            this.deleteEntry(id);
+                        });
+                    });
+                },
+                
+                deleteEntry: function(id) {
+                    this.entries = this.entries.filter(entry => entry.id !== id);
+                    localStorage.setItem('journal', JSON.stringify(this.entries));
+                    this.displayEntries();
+                }
+            };
+            
+            // Initialize Journal
+            function initJournal() {
+                const journalForm = document.getElementById('journal-form');
+                const clearBtn = document.getElementById('clear-form');
+                
+                if (!journalForm) return;
+                
+                // Load existing entries
+                journal.displayEntries();
+                
+                // Form submission
+                journalForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const textarea = document.getElementById('journal-text');
+                    journal.saveEntry(textarea.value);
+                    textarea.value = '';
+                    textarea.focus();
+                });
+                
+                // Clear form button
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => {
+                        document.getElementById('journal-text').value = '';
+                    });
+                }
+            }
+            
+            // Initialize when page loads
+            document.addEventListener('DOMContentLoaded', initJournal);
+        </script>
+    </body>
+</html>
