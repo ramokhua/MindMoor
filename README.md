@@ -2,7 +2,7 @@
 
 ![MindMoor Banner](logo-transparent.png)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/951ddffb-b337-41b3-b453-93fe7bb0f319/deploy-status)](https://app.netlify.com/sites/mindmoor/deploys) 
+[![Netlify Status]([![Netlify Status](https://api.netlify.com/api/v1/badges/1b37ef9e-4556-4c76-8fa8-88ee62d54a92/deploy-status)](https://app.netlify.com/projects/mindmoor/deploys)) 
 
 A holistic web platform for mental wellness featuring mood tracking, therapeutic exercises, and AI-powered support.
 
