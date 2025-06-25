@@ -20,7 +20,7 @@ A holistic web platform for mental wellness featuring mood tracking, therapeutic
 
 ### 🎨 Design Highlights
 - **Calming color palette** designed for mental wellness
-- **Fully responsive** across all deviceshttps://mindmoor.netlify.app/moira-chatbot/moira
+- **Fully responsive** across all devices
 - **Accessible UI** with proper contrast and ARIA labels
 - **Smooth animations** for therapeutic experience
 
