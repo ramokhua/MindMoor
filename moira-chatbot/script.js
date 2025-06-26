@@ -1,7 +1,7 @@
 const chatbot = {
     config: {
         apiUrl: 'https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill',
-        apiKey: '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',
+        apiKey: '',
         minResponseTime: 800,
         maxResponseTime: 3000,
         fallbackApiUrl: 'https://api.openai.com/v1/chat/completions',
