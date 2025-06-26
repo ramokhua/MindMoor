@@ -1,4 +1,4 @@
-const apiKey: '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';
+
 
 async function sendMessage() {
     const chatBotInput = document.getElementById('chatbot-input').value;
