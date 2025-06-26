@@ -11,7 +11,7 @@ const chatbot = {
 
     init: function() {
         if (!document.getElementById('send-message')) return;
-        
+
         // Event listeners
         document.getElementById('send-message').addEventListener('click', () => this.sendMessage());
         document.getElementById('chatbot-input').addEventListener('keypress', (e) => {
@@ -41,39 +41,39 @@ const chatbot = {
         this.conversationHistory.push({ sender: 'user', message });
         input.value = '';
         input.focus();
-        
+
         const typingIndicator = this.showTypingIndicator();
-        
+
         // Add delay for better UX
         const delay = Math.max(
             this.config.minResponseTime,
             Math.random() * this.config.maxResponseTime
         );
-        
+
         // Check for keywords first
         const keywordResponse = this.getKeywordResponse(message);
         if (keywordResponse) {
             setTimeout(() => {
                 this.hideTypingIndicator(typingIndicator);
                 this.addMessage('bot', keywordResponse);
-                this.conversationHistory.push({ sender: 'bot', response: keywordResponse });
+                this.conversationHistory.push({ sender: 'bot', message: keywordResponse });
             }, delay);
             return;
         }
-        
+
         this.getAIResponse(message)
             .then(response => {
                 setTimeout(() => {
                     this.hideTypingIndicator(typingIndicator);
                     this.addMessage('bot', response);
-                    this.conversationHistory.push({ sender: 'bot', response });
+                    this.conversationHistory.push({ sender: 'bot', message: response });
                 }, delay);
             })
             .catch(error => {
                 this.hideTypingIndicator(typingIndicator);
                 const fallback = this.getFallbackResponse();
                 this.addMessage('bot', fallback);
-                this.conversationHistory.push({ sender: 'bot', response: fallback });
+                this.conversationHistory.push({ sender: 'bot', message: fallback });
                 console.error("Chatbot error:", error);
             });
     },
@@ -85,33 +85,33 @@ const chatbot = {
         if(/(hi|hey|hello)/i.test(lowerMsg)){
             return this.getGreetingsResponse();
         }
-        
+
         // Crisis keywords
         if (/(suicidal|self.?harm|kill myself|end it all)/i.test(lowerMsg)) {
             return "I'm really concerned about what you're sharing. Please contact your local crisis hotline immediately. You're not alone, and help is available.";
         }
-        
+
         // Common mental health topics
         if (/(stress|overwhelm|overwhelmed)/i.test(lowerMsg)) {
             return this.getStressResponse();
         }
-        
+
         if (/(anxious|anxiety|nervous|worried)/i.test(lowerMsg)) {
             return this.getAnxietyResponse();
         }
-        
+
         if (/(interview|job|work|employment)/i.test(lowerMsg)) {
             return this.getInterviewResponse();
         }
-        
+
         if (/(lonely|alone|isolated)/i.test(lowerMsg)) {
             return this.getLonelinessResponse();
         }
-        
+
         if (/(depress|sad|miserable|down)/i.test(lowerMsg)) {
             return this.getDepressionResponse();
         }
-        
+
         return null;
     },
 
@@ -123,7 +123,7 @@ const chatbot = {
             "I'm here to listen. What's been on your mind lately?"
         ];
         return options[Math.floor(Math.random() * options.length)];
-    };
+    },  // Removed the semicolon here
 
     getStressResponse: function() {
         const options = [
@@ -187,7 +187,7 @@ const chatbot = {
                         generated_responses: this.conversationHistory
                             .filter(m => m.sender === 'bot')
                             .slice(-2)
-                            .map(m => m.response),
+                            .map(m => m.message),
                         text: userMessage
                     },
                     parameters: {
@@ -196,7 +196,7 @@ const chatbot = {
                     }
                 })
             });
-            
+
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
                 if (response.status === 503 && errorData.error === "Model is loading") {
@@ -207,7 +207,7 @@ const chatbot = {
                 }
                 throw new Error(`API error: ${response.status}`);
             }
-            
+
             const data = await response.json();
             return this.processResponse(data);
         } catch (error) {
@@ -215,16 +215,16 @@ const chatbot = {
             return this.getFallbackResponse();
         }
     },
-    
+
     processResponse: function(data) {
         if (data.error) {
             console.error("API Error:", data.error);
             return this.getFallbackResponse();
         }
-        
+
         // Handle different response formats
         let responseText = "";
-        
+
         if (data.generated_text) {
             responseText = data.generated_text;
         } 
@@ -234,36 +234,36 @@ const chatbot = {
         else if (data.conversation && data.conversation.generated_responses) {
             responseText = data.conversation.generated_responses.slice(-1)[0];
         }
-        
+
         if (!responseText.trim()) {
             return this.getFallbackResponse();
         }
-        
+
         return this.cleanResponse(responseText);
     },
-    
+
     cleanResponse: function(text) {
         if (!text) return this.getFallbackResponse();
-        
+
         // Remove any bot-specific prefixes
         let cleaned = text.replace(/^\s*(bot|ai|moira):?\s*/i, '').trim();
-        
+
         // Remove special tokens or weird characters
         cleaned = cleaned.replace(/<\/?s>|\[|\]|\(|\)/g, '');
-        
+
         // Ensure proper punctuation
         if (!/[.!?]$/.test(cleaned)) {
             cleaned += '.';
         }
-        
+
         // Capitalize first letter and fix spacing
         cleaned = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
         cleaned = cleaned.replace(/\s+([.,!?])/g, '$1');
         cleaned = cleaned.replace(/([.,!?])([a-zA-Z])/g, '$1 $2');
-        
+
         return cleaned;
     },
-    
+
     getFallbackResponse: function() {
         const fallbacks = [
             "I want to understand better. Could you share more about what you're experiencing?",
@@ -301,13 +301,13 @@ const chatbot = {
         const container = document.getElementById('chatbot-messages');
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
-        
+
         const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         messageDiv.innerHTML = `
             <div class="message-content">${text}</div>
             <div class="message-time">${timestamp}</div>
         `;
-        
+
         container.appendChild(messageDiv);
         container.scrollTop = container.scrollHeight;
     }
