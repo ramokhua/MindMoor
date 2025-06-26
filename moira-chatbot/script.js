@@ -1,11 +1,10 @@
 const chatbot = {
     config: {
-        apiUrl: 'https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill',
-        apiKey: '',
+        apiUrl: window.location.hostname === 'localhost' 
+            ? 'http://localhost:3001/api/chat'
+            : 'https://your-production-backend.com/api/chat',
         minResponseTime: 800,
-        maxResponseTime: 3000,
-        fallbackApiUrl: 'https://api.openai.com/v1/chat/completions',
-        fallbackApiKey: 'YOUR_OPENAI_KEY'
+        maxResponseTime: 3000
     },
     conversationHistory: [],
     lastMessageTime: null,
@@ -72,7 +71,6 @@ const chatbot = {
             const lowerMsg = message.toLowerCase();
             const now = Date.now();
             
-            // Don't change context too frequently
             if (now - this.lastContextChange < 30000 && this.currentContext) return;
             
             if (/(stress|overwhelm)/i.test(lowerMsg)) {
@@ -115,7 +113,6 @@ const chatbot = {
                 ]
             };
             
-            // Only use contextual follow-up 40% of the time to avoid being repetitive
             if (Math.random() > 0.4) return null;
             
             return contextualFollowUps[this.currentContext]?.[Math.floor(Math.random() * contextualFollowUps[this.currentContext].length)];
@@ -239,16 +236,13 @@ const chatbot = {
     init: function() {
         if (!document.getElementById('send-message')) return;
 
-        // Load memory
         this.memory.load();
 
-        // Event listeners
         document.getElementById('send-message').addEventListener('click', () => this.sendMessage());
         document.getElementById('chatbot-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.sendMessage();
         });
 
-        // Welcome message
         setTimeout(() => {
             const name = this.memory.recall('name');
             if (name) {
@@ -261,7 +255,6 @@ const chatbot = {
 
     // Main message handling
     sendMessage: function() {
-        // Rate limiting
         if (this.lastMessageTime && Date.now() - this.lastMessageTime < 1000) {
             this.addMessage('bot', "Please wait a moment before sending another message.");
             return;
@@ -280,44 +273,34 @@ const chatbot = {
 
         const typingIndicator = this.showTypingIndicator();
 
-        // Add delay for better UX
-        const delay = Math.max(
-            this.config.minResponseTime,
-            Math.random() * this.config.maxResponseTime
-        );
-
         // Handle exercise continuation first
-        if (this.exerciseManager.currentExercise) {
+        if (this.currentExercise) {
             const exerciseResponse = this.handleExerciseContinuation(message);
             if (exerciseResponse) {
                 setTimeout(() => {
                     this.hideTypingIndicator(typingIndicator);
                     this.addMessage('bot', exerciseResponse);
                     this.conversationHistory.push({ sender: 'bot', message: exerciseResponse });
-                }, delay);
+                }, this.getRandomResponseTime());
                 return;
             }
         }
 
-        // Check for crisis keywords immediately
+        // Check for crisis keywords
         if (this.checkForCrisis(message)) {
             setTimeout(() => {
                 this.hideTypingIndicator(typingIndicator);
                 const crisisResponse = this.getCrisisResponse();
                 this.addMessage('bot', crisisResponse);
                 this.conversationHistory.push({ sender: 'bot', message: crisisResponse });
-            }, delay);
+            }, this.getRandomResponseTime());
             return;
         }
 
-        // Analyze emotion
         const emotion = this.emotionalResponse.detectEmotion(message);
         const emotionalResponse = this.emotionalResponse.getEmotionalResponse(emotion);
-
-        // Set context
         this.contextManager.setContext(message);
 
-        // Try learned responses
         const learnedResponse = this.learning.findSimilarResponse(message);
         if (learnedResponse && Math.random() > 0.5) {
             setTimeout(() => {
@@ -325,11 +308,10 @@ const chatbot = {
                 this.addMessage('bot', learnedResponse);
                 this.conversationHistory.push({ sender: 'bot', message: learnedResponse });
                 this.learning.analyzeConversation(this.conversationHistory);
-            }, delay);
+            }, this.getRandomResponseTime());
             return;
         }
 
-        // Check for keywords
         const keywordResponse = this.getKeywordResponse(message);
         if (keywordResponse) {
             setTimeout(() => {
@@ -337,11 +319,10 @@ const chatbot = {
                 this.addMessage('bot', keywordResponse);
                 this.conversationHistory.push({ sender: 'bot', message: keywordResponse });
                 this.learning.analyzeConversation(this.conversationHistory);
-            }, delay);
+            }, this.getRandomResponseTime());
             return;
         }
 
-        // Try contextual follow-up
         const contextualResponse = this.contextManager.getContextualResponse();
         if (contextualResponse) {
             setTimeout(() => {
@@ -349,14 +330,12 @@ const chatbot = {
                 this.addMessage('bot', contextualResponse);
                 this.conversationHistory.push({ sender: 'bot', message: contextualResponse });
                 this.learning.analyzeConversation(this.conversationHistory);
-            }, delay);
+            }, this.getRandomResponseTime());
             return;
         }
 
-        // Get AI response
         this.getAIResponse(message)
             .then(response => {
-                // Combine AI response with emotional response if appropriate
                 let fullResponse = response;
                 if (emotion !== 'neutral' && Math.random() > 0.5) {
                     fullResponse = `${emotionalResponse} ${response}`;
@@ -367,7 +346,7 @@ const chatbot = {
                     this.addMessage('bot', fullResponse);
                     this.conversationHistory.push({ sender: 'bot', message: fullResponse });
                     this.learning.analyzeConversation(this.conversationHistory);
-                }, delay);
+                }, this.getRandomResponseTime());
             })
             .catch(error => {
                 console.error("Chatbot error:", error);
@@ -378,26 +357,53 @@ const chatbot = {
             });
     },
 
-    // Handle exercise continuation
+    getRandomResponseTime: function() {
+        return Math.max(
+            this.config.minResponseTime,
+            Math.random() * this.config.maxResponseTime
+        );
+    },
+
+    getAIResponse: async function(userMessage) {
+        try {
+            const response = await fetch(this.config.apiUrl, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    message: userMessage,
+                    conversationHistory: this.conversationHistory
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.response || this.getFallbackResponse();
+        } catch (error) {
+            console.error("Backend error:", error);
+            return this.getFallbackResponse();
+        }
+    },
+
     handleExerciseContinuation: function(message) {
-        if (!this.exerciseManager.currentExercise) return null;
+        if (!this.currentExercise) return null;
         
-        // Check if user wants to stop
         if (/(stop|quit|end|no)/i.test(message.toLowerCase())) {
-            this.exerciseManager.currentExercise = null;
+            this.currentExercise = null;
             return "Okay, we've stopped the exercise. Would you like to try something else?";
         }
         
-        // Continue exercise
         const nextStep = this.exerciseManager.nextStep();
         if (nextStep.completed) {
-            // Exercise completed - suggest mood tracking
             return `${nextStep.message} Would you like to <a href="../mood/mood-tracker.html" style="color: #5d93a6; text-decoration: underline;">track your mood</a> now?`;
         }
         return nextStep.message;
     },
 
-    // Crisis detection and response
     checkForCrisis: function(message) {
         const crisisKeywords = [
             'suicide', 'suicidal', 'kill myself', 'end it all', 
@@ -418,23 +424,19 @@ const chatbot = {
                 Would you like me to help you find more resources?`;
     },
 
-    // Keyword responses
     getKeywordResponse: function(message) {
         const lowerMsg = message.toLowerCase();
 
-        // Name detection
         if (/(my name is|I am|I'm) (\w+)/i.test(message)) {
             const name = message.match(/(my name is|I am|I'm) (\w+)/i)[2];
             this.memory.remember('name', name);
             return `Nice to meet you, ${name}! How can I help you today?`;
         }
 
-        // Greetings
         if (/(hi|hey|hello|greetings)/i.test(lowerMsg)) {
             return this.getGreetingsResponse();
         }
 
-        // Exercises
         if (/(grounding exercise|54321|5-4-3-2-1)/i.test(lowerMsg)) {
             return this.exerciseManager.startExercise('grounding');
         }
@@ -443,7 +445,6 @@ const chatbot = {
             return this.exerciseManager.startExercise('breathing');
         }
 
-        // Common mental health topics
         if (/(stress|overwhelm|overwhelmed)/i.test(lowerMsg)) {
             return this.getStressResponse();
         }
@@ -468,7 +469,6 @@ const chatbot = {
             return this.getAngerResponse();
         }
 
-        // Resources
         if (/(resources|help|support|therapy)/i.test(lowerMsg)) {
             return this.getResourceResponse();
         }
@@ -556,150 +556,6 @@ const chatbot = {
                 Would you like help finding something specific?`;
     },
 
-    // AI response handling
-    getAIResponse: async function(userMessage) {
-        try {
-            // First try main API
-            const response = await this.queryMainAPI(userMessage);
-            if (response && response.length > 15) return response;
-            
-            // Fallback to secondary API if main fails
-            const fallbackResponse = await this.queryFallbackAPI(userMessage);
-            if (fallbackResponse) return fallbackResponse;
-            
-            // Final fallback
-            return this.getFallbackResponse();
-        } catch (error) {
-            console.error("API Error:", error);
-            return this.getFallbackResponse();
-        }
-    },
-
-    queryMainAPI: async function(userMessage) {
-        try {
-            const response = await fetch(this.config.apiUrl, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.config.apiKey}`
-                },
-                body: JSON.stringify({ 
-                    inputs: {
-                        past_user_inputs: this.conversationHistory
-                            .filter(m => m.sender === 'user')
-                            .slice(-3)
-                            .map(m => m.message),
-                        generated_responses: this.conversationHistory
-                            .filter(m => m.sender === 'bot')
-                            .slice(-3)
-                            .map(m => m.message),
-                        text: userMessage
-                    },
-                    parameters: {
-                        return_full_text: false,
-                        max_length: 200,
-                        temperature: 0.7
-                    }
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                if (response.status === 503 && errorData.error === "Model is loading") {
-                    return "I'm still waking up. Please try again in a few seconds.";
-                }
-                if (response.status === 429) {
-                    return "I'm getting too many requests. Please wait a moment before trying again.";
-                }
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return this.processResponse(data);
-        } catch (error) {
-            console.error("Main API Error:", error);
-            return null;
-        }
-    },
-
-    queryFallbackAPI: async function(userMessage) {
-        try {
-            const response = await fetch(this.config.fallbackApiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.config.fallbackApiKey}`
-                },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [{
-                        role: "system",
-                        content: "You are Moira, a compassionate mental health assistant. Respond with empathy, " +
-                                 "non-judgment, and care. Keep responses under 200 characters. " +
-                                 "Focus on active listening and emotional support."
-                    }, {
-                        role: "user",
-                        content: userMessage
-                    }],
-                    temperature: 0.7,
-                    max_tokens: 150
-                })
-            });
-            
-            const data = await response.json();
-            return data.choices[0]?.message?.content || '';
-        } catch (error) {
-            console.error("Fallback API Error:", error);
-            return null;
-        }
-    },
-
-    processResponse: function(data) {
-        if (data.error) {
-            console.error("API Error:", data.error);
-            return this.getFallbackResponse();
-        }
-
-        let responseText = "";
-        if (data.generated_text) {
-            responseText = data.generated_text;
-        } 
-        else if (Array.isArray(data) && data.length > 0) {
-            responseText = data[0].generated_text || "";
-        }
-        else if (data.conversation && data.conversation.generated_responses) {
-            responseText = data.conversation.generated_responses.slice(-1)[0];
-        }
-
-        if (!responseText.trim()) {
-            return this.getFallbackResponse();
-        }
-
-        return this.cleanResponse(responseText);
-    },
-
-    cleanResponse: function(text) {
-        if (!text) return this.getFallbackResponse();
-
-        // Remove any bot-specific prefixes
-        let cleaned = text.replace(/^\s*(bot|ai|moira):?\s*/i, '').trim();
-
-        // Remove special tokens or weird characters
-        cleaned = cleaned.replace(/<\/?s>|\[|\]|\(|\)/g, '');
-
-        // Ensure proper punctuation
-        if (!/[.!?]$/.test(cleaned)) {
-            cleaned += '.';
-        }
-
-        // Capitalize first letter and fix spacing
-        cleaned = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-        cleaned = cleaned.replace(/\s+([.,!?])/g, '$1');
-        cleaned = cleaned.replace(/([.,!?])([a-zA-Z])/g, '$1 $2');
-
-        return cleaned;
-    },
-
     getFallbackResponse: function() {
         const fallbacks = [
             "I want to understand better. Could you share more about what you're experiencing?",
@@ -710,7 +566,6 @@ const chatbot = {
         return fallbacks[Math.floor(Math.random() * fallbacks.length)];
     },
 
-    // UI functions
     showTypingIndicator: function() {
         const container = document.getElementById('chatbot-messages');
         const indicator = document.createElement('div');
