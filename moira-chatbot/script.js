@@ -20,7 +20,7 @@ const chatbot = {
 
         // Welcome message
         setTimeout(() => {
-            this.addMessage('bot', "Hello! I'm Moira. How can I help you today?");
+            this.addMessage('bot', "Hello! I'm Moira.");
         }, 1000);
     },
 
@@ -80,6 +80,11 @@ const chatbot = {
 
     getKeywordResponse: function(message) {
         const lowerMsg = message.toLowerCase();
+
+        //greetings keywords
+        if(/(hi|hey|hello)/i.test(lowerMsg)){
+            return this.getGreetingsResponse();
+        }
         
         // Crisis keywords
         if (/(suicidal|self.?harm|kill myself|end it all)/i.test(lowerMsg)) {
@@ -109,6 +114,16 @@ const chatbot = {
         
         return null;
     },
+
+    getGreetingsResponse: function() {
+        const options = [
+            "How can I help you today?",
+            "How are you doing?",
+            "I'm here to listen. What's on your mind?",
+            "I'm here to listen. What's been on your mind lately?"
+        ];
+        return options[Math.floor(Math.random() * options.length)];
+    };
 
     getStressResponse: function() {
         const options = [
