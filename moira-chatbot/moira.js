@@ -5,21 +5,21 @@ async function sendMessage() {
     if (!chatBotInput) return;
 
     // Display user message
-    const chatbotInputContainer = document.getElementById('chatbot-input-container');
+    const chatBox = document.getElementById('chatbot-messages');
     chatBox.innerHTML += `<div class="user-message">${chatBotInput}</div>`;
-    document.getElementById('chatbot-input-container').value = '';
+    document.getElementById('chatbot-input-').value = '';
 
     // Call Hugging Face API
     try {
         const response = await axios.post(
             'https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium',
-            { inputs: chatBotInput },
+            { inputs: chatBox },
             { headers: { Authorization: `Bearer ${apiKey}` } }
         );
 
         const botMessage = response.data.generated_text;
-        chatbotInputContainer.innerHTML += `<div class="bot-message">${botMessage}</div>`;
-        chatbotInputContainer.scrollTop = chatbotInputContainer.scrollHeight;
+        chatBox.innerHTML += `<div class="bot-message">${botMessage}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
     } catch (error) {
         console.error('Error:', error);
     }
