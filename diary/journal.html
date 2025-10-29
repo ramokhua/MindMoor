@@ -60,7 +60,8 @@
                 margin: 0;
                 line-height: 1.6;
             }
-                    form-actions {
+            
+            .form-actions {
                 display: flex;
                 gap: 1rem;
             }
@@ -74,6 +75,12 @@
             #save-entry {
                 background-color: var(--primary);
                 color: white;
+            }
+            
+            #save-entry:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+                opacity: 0.6;
             }
             
             #clear-form {
@@ -99,6 +106,22 @@
             .delete-entry:hover {
                 background-color: rgba(231, 76, 60, 0.1);
             }
+            
+            /* Limit Warning */
+            .limit-warning {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                color: #856404;
+                padding: 0.75rem 1rem;
+                border-radius: 8px;
+                margin-bottom: 1rem;
+                text-align: center;
+                display: none;
+            }
+            
+            .limit-warning.show {
+                display: block;
+            }
         </style>
     </head>
     <body>
@@ -120,6 +143,9 @@
         <main>
           <section class="journal">
                 <h1>Journal</h1>
+                <div id="limit-warning" class="limit-warning">
+                    <strong>Maximum entries reached!</strong> Please delete some old entries to add new ones.
+                </div>
                 <form id="journal-form">
                     <textarea 
                         id="journal-text" 
@@ -146,9 +172,16 @@
             // Journal System
             const journal = {
                 entries: JSON.parse(localStorage.getItem('journal')) || [],
+                MAX_ENTRIES: 50, // Edge case: Maximum number of entries allowed
                 
                 saveEntry: function(text) {
                     if (!text.trim()) return;
+                    
+                    // Edge case: Check if maximum entries limit reached
+                    if (this.entries.length >= this.MAX_ENTRIES) {
+                        this.showLimitWarning();
+                        return false;
+                    }
                     
                     const newEntry = {
                         id: Date.now(),
@@ -159,6 +192,8 @@
                     this.entries.unshift(newEntry);
                     localStorage.setItem('journal', JSON.stringify(this.entries));
                     this.displayEntries();
+                    this.hideLimitWarning();
+                    return true;
                 },
                 
                 displayEntries: function() {
@@ -173,6 +208,9 @@
                         </div>
                     `).join('');
                     
+                    // Update save button state based on limit
+                    this.updateSaveButtonState();
+                    
                     // Add delete handlers
                     document.querySelectorAll('.delete-entry').forEach(btn => {
                         btn.addEventListener('click', (e) => {
@@ -186,6 +224,35 @@
                     this.entries = this.entries.filter(entry => entry.id !== id);
                     localStorage.setItem('journal', JSON.stringify(this.entries));
                     this.displayEntries();
+                    this.hideLimitWarning();
+                },
+                
+                showLimitWarning: function() {
+                    const warning = document.getElementById('limit-warning');
+                    if (warning) {
+                        warning.classList.add('show');
+                    }
+                },
+                
+                hideLimitWarning: function() {
+                    const warning = document.getElementById('limit-warning');
+                    if (warning) {
+                        warning.classList.remove('show');
+                    }
+                },
+                
+                updateSaveButtonState: function() {
+                    const saveButton = document.getElementById('save-entry');
+                    if (saveButton) {
+                        if (this.entries.length >= this.MAX_ENTRIES) {
+                            saveButton.disabled = true;
+                            saveButton.textContent = 'Maximum Entries Reached';
+                            this.showLimitWarning();
+                        } else {
+                            saveButton.disabled = false;
+                            saveButton.textContent = 'Save Entry';
+                        }
+                    }
                 }
             };
             
@@ -203,9 +270,11 @@
                 journalForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     const textarea = document.getElementById('journal-text');
-                    journal.saveEntry(textarea.value);
-                    textarea.value = '';
-                    textarea.focus();
+                    const success = journal.saveEntry(textarea.value);
+                    if (success) {
+                        textarea.value = '';
+                        textarea.focus();
+                    }
                 });
                 
                 // Clear form button
