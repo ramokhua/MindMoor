@@ -1,117 +1,145 @@
-# MindMoor - Mental Wellness Platform
+# MindMoor — React + Flask Rebuild
 
-![MindMoor Banner](logo-transparent.png)
-
-[![Netlify Status]([![Netlify Status](https://api.netlify.com/api/v1/badges/1b37ef9e-4556-4c76-8fa8-88ee62d54a92/deploy-status)](https://app.netlify.com/projects/mindmoor/deploys)) 
-
-A holistic web platform for mental wellness featuring mood tracking, therapeutic exercises, and AI-powered support.
-
-## Etymology & Design Intent  
-- **MindMoor**: Combines "mind" + "moor" (Old English *mōr*), reflecting the app’s focus on creating mental space. MindMoor symbolizes an uncultivated, open landscape - reflecting the app's goal to help users declutter mental noise and find calm  
-- **Moira**: Chosen for its mythological roots in agency (weaving one’s path) versus passive "fate." Moira embodies the idea of guided self-discovery and acts as a supportive, non-judgemental entity that helps users to navigate their mental journey with personalized coping strategies. 
-
-## ✨ Key Features
-
-### 🧠 Core Functionality
-- **Mood Tracker** with visual analytics (Chart.js)
-- **Guided Breathing Exercises** (4-7-8, Box Breathing, Relaxing Breath)
-- **5-4-3-2-1 Grounding Technique** for anxiety relief
-- **Digital Journal** with local storage persistence
-
-### 🤖 AI Support
-- **Moira Chatbot** - 24/7 mental health companion
-- **Context-aware responses** using Hugging Face API
-- **Typing indicators** for natural conversation flow
-
-### 🎨 Design Highlights
-- **Calming color palette** designed for mental wellness
-- **Fully responsive** across all devices
-- **Accessible UI** with proper contrast and ARIA labels
-- **Smooth animations** for therapeutic experience
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Edge)
-- Internet connection (for AI features)
-
-### Installation
-```bash
-git clone https://github.com/ramokhua/mindmoor.git
-cd mindmoor
-```
-
-### Running Locally
-1. Open `index.html` in your browser
-2. Or use Live Server extension in VS Code
-
-## 🌐 Live Deployment
-[![Visit MindMoor](https://img.shields.io/badge/Visit-MindMoor-5d93a6?style=for-the-badge)](https://mindmoor.netlify.app/)
-
-## 🛠️ Tech Stack
-
-### Frontend
-| Technology | Use Case |
-|------------|----------|
-| HTML5 | Semantic structure |
-| CSS3 | Styling and animations |
-| JavaScript | Core functionality |
-| Chart.js | Mood visualization |
-
-### Backend
-| Technology | Use Case |
-|------------|----------|
-| LocalStorage | Data persistence |
-| Hugging Face API | AI conversation |
-
-## 📸 Feature Showcase
-
-| Feature | Preview | Description |
-|---------|---------|-------------|
-| Mood Tracker | ![Mood Tracker](Mood.jpg) | Visualize emotional patterns over time |
-| Breathing Exercises | ![Breathing](Breathing.jpg) | Animated guides for stress relief |
-| Moira Chatbot | ![Chatbot](Moira.jpg) | AI mental health companion |
-
-## 📖 User Guide
-
-1. **Mood Tracking**
-   - Click emoji buttons to log your mood
-   - View trends in your analytics dashboard
-
-2. **Therapeutic Tools**
-   - Follow guided breathing animations
-   - Complete the 5-4-3-2-1 grounding exercise
-   - Journal your thoughts with automatic saving
-
-3. **Moira Chatbot**
-   - Type your feelings in natural language
-   - Receive supportive, context-aware responses
-   - Access crisis resources when needed
-
-## 📈 Roadmap
-
-- [ ] User accounts with Firebase
-- [ ] Mood correlation analysis
-- [ ] Community support features
-
-## 🤝 How to Contribute
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 🙏 Acknowledgments
-
-- **Human Computer Interaction (CSI392)** - Project inspiration
-- **Chart.js** - Beautiful data visualization
-- **Hugging Face** - AI conversation models
-- **Netlify** - Free hosting and deployment
+A modular React frontend with a Python Flask backend powering the Moira AI chatbot (fine-tuned HuggingFace model).
 
 ---
 
-<div align="center">
-  <p>Made with ❤️ and JavaScript</p>
-  <p>Anchor Your Thoughts, Steady Your Soul</p>
-</div>
+## Project Structure
+
+```
+mindmoor/
+├── frontend/                  # React (Vite) app
+│   ├── src/
+│   │   ├── App.jsx            # Router root
+│   │   ├── components/
+│   │   │   ├── layout/        # Header, nav, footer
+│   │   │   └── pages/         # One file per page
+│   │   └── styles/globals.css # Design tokens + shared styles
+│   └── vite.config.js         # Dev proxy → Flask :5000
+│
+└── backend/                   # Flask API
+    ├── app.py                 # App factory
+    ├── routes/
+    │   ├── chat.py            # POST /api/chat
+    │   ├── health.py          # GET  /api/health
+    │   └── training.py        # POST /api/training/start|upload
+    ├── models/
+    │   └── model_loader.py    # Lazy model singleton
+    ├── utils/
+    │   ├── prompt.py          # Prompt builder + cleaner
+    │   └── safety.py          # Crisis detection
+    ├── train.py               # Standalone fine-tuning script
+    └── data/
+        └── training_data.jsonl  # Seed training examples
+```
+
+---
+
+## Quick Start
+
+### 1. Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev          # → http://localhost:3000
+```
+
+### 2. Backend
+
+```bash
+cd backend
+python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env                              # edit as needed
+python app.py        # → http://localhost:5000
+```
+
+> The first `/api/chat` request will download the base model (~700 MB for BlenderBot-400M).
+> Subsequent requests use the cached model.
+
+---
+
+## Fine-Tuning Moira
+
+### Option A — Command line (recommended)
+
+```bash
+cd backend
+
+# 1. Add your training data (JSONL: {"input": "...", "output": "..."})
+#    A seed file is already at data/training_data.jsonl
+
+# 2. Run fine-tuning (LoRA keeps VRAM under 6 GB)
+python train.py \
+  --model facebook/blenderbot-400M-distill \
+  --data  ./data/training_data.jsonl \
+  --output ./models/moira-finetuned \
+  --epochs 3 \
+  --use-lora
+
+# 3. Set env var and restart Flask — it auto-loads the fine-tuned model
+export FINE_TUNED_DIR=./models/moira-finetuned
+python app.py
+```
+
+### Option B — API (trigger from your app)
+
+```bash
+# Upload data
+curl -X POST http://localhost:5000/api/training/upload \
+     -H "Content-Type: application/json" \
+     -d '[{"input":"I feel anxious","output":"I hear you..."}]'
+
+# Start training
+curl -X POST http://localhost:5000/api/training/start \
+     -H "Content-Type: application/json" \
+     -d '{"epochs": 3, "use_lora": true}'
+
+# Poll status
+curl http://localhost:5000/api/training/status
+```
+
+---
+
+## Training Data Format
+
+Each line in `training_data.jsonl`:
+```json
+{"input": "user message", "output": "Moira's ideal response"}
+```
+
+Tips for quality data:
+- 100+ diverse examples minimum
+- Cover: anxiety, depression, stress, loneliness, anger, sleep issues
+- Keep Moira's tone: warm, concise, non-diagnostic, empathetic
+
+---
+
+## Adding a New Page
+
+1. Create `frontend/src/components/pages/MyPage.jsx` + `MyPage.css`
+2. Add a route in `App.jsx`:  `<Route path="mypage" element={<MyPage />} />`
+3. Add a nav link in `Layout.jsx` if needed
+
+---
+
+## Environment Variables (backend)
+
+| Variable            | Default                                | Description |
+|---------------------|----------------------------------------|-------------|
+| `BASE_MODEL`        | `facebook/blenderbot-400M-distill`     | HuggingFace model ID |
+| `FINE_TUNED_DIR`    | `./models/moira-finetuned`             | Local fine-tuned model path |
+| `MAX_NEW_TOKENS`    | `200`                                  | Max response length |
+| `MODEL_TEMPERATURE` | `0.75`                                 | Sampling temperature |
+| `RATE_LIMIT`        | `30`                                   | Requests per window per IP |
+| `RATE_WINDOW`       | `60`                                   | Window in seconds |
+| `FRONTEND_URL`      | `http://localhost:3000`                | CORS origin |
+
+---
+
+## Deployment
+
+- **Frontend** → Netlify / Vercel: `npm run build` → deploy `dist/`
+- **Backend** → Railway / Render / Fly.io: `gunicorn app:create_app()`
+- Update `FRONTEND_URL` in `.env` and the `proxy` target in `vite.config.js` → `VITE_API_URL`

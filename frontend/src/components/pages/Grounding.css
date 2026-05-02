@@ -1,0 +1,119 @@
+.grounding-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.timer {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  padding-top: 0.3rem;
+}
+
+.progress-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 50px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+  border-radius: 50px;
+  transition: width 0.5s ease;
+}
+
+.step-label { font-size: 0.82rem; margin-bottom: 1.5rem; }
+
+.grounding-step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.sense-emoji { font-size: 2rem; }
+.grounding-step-header h2 { margin: 0; }
+
+.grounding-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.grounding-nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Step dots */
+.step-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.step-dot {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-dot.done {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.step-dot.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(93,147,166,0.25);
+}
+
+/* Completion */
+.completion-card {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.completion-emoji { font-size: 4rem; margin-bottom: 1rem; display: block; }
+.completion-card h1 { margin-bottom: 0.5rem; }
+
+.summary {
+  text-align: left;
+  background: var(--light);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.summary-step ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-top: 0.3rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.completion-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
