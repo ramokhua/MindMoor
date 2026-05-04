@@ -16,7 +16,7 @@ def create_app():
     # Register blueprints
     from routes.chat import chat_bp
     from routes.health import health_bp
-    from backend.train import training_bp
+    from routes.training import training_bp
 
     app.register_blueprint(chat_bp,     url_prefix="/api")
     app.register_blueprint(health_bp,   url_prefix="/api")
