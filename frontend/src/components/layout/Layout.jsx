@@ -1,18 +1,21 @@
 import { useState } from 'react'
 import { Outlet, NavLink, Link } from 'react-router-dom'
+import { useTheme } from '../../context/ThemeContext'
 import './Layout.css'
 
 const NAV_LINKS = [
-  { to: '/mood',      label: 'Mood Tracker' },
-  { to: '/journal',   label: 'Journal' },
+  { to: '/dashboard', label: 'Dashboard' },
+  { to: '/mood', label: 'Mood Tracker' },
+  { to: '/journal', label: 'Journal' },
   { to: '/breathing', label: 'Breathing' },
   { to: '/exercises', label: 'Exercises' },
   { to: '/resources', label: 'Resources' },
-  { to: '/moira',     label: 'Chat with Moira' },
+  { to: '/moira', label: 'Chat with Moira' },
 ]
 
 export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { isDark, toggle } = useTheme()
 
   return (
     <div className="app-shell">
@@ -25,13 +28,23 @@ export default function Layout() {
             </div>
           </Link>
 
-          <button
-            className={`menu-toggle ${menuOpen ? 'open' : ''}`}
-            onClick={() => setMenuOpen(v => !v)}
-            aria-label="Toggle menu"
-          >
-            <span /><span /><span />
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <button
+              onClick={toggle}
+              className="theme-toggle"
+              aria-label="Toggle dark mode"
+            >
+              {isDark ? '☀️' : '🌙'}
+            </button>
+
+            <button
+              className={`menu-toggle ${menuOpen ? 'open' : ''}`}
+              onClick={() => setMenuOpen(v => !v)}
+              aria-label="Toggle menu"
+            >
+              <span /><span /><span />
+            </button>
+          </div>
 
           <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
             {NAV_LINKS.map(({ to, label }) => (

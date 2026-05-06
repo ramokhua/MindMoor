@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Chart, registerables } from 'chart.js'
+import { useToast } from '../../hooks/useToast'
 import './MoodTracker.css'
 
 Chart.register(...registerables)
@@ -25,27 +26,71 @@ const TIPS = {
 export default function MoodTracker() {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
+  const { addToast } = useToast()
   const [history, setHistory] = useState(() =>
     JSON.parse(localStorage.getItem('moodHistory') || '[]')
   )
   const [selected, setSelected] = useState(null)
   const [tip, setTip] = useState('')
+  const [note, setNote] = useState('')
+  const [showNoteInput, setShowNoteInput] = useState(false)
+  const [pendingMood, setPendingMood] = useState(null)
 
-  const logMood = (mood) => {
-    const entry = { date: new Date().toISOString(), ...mood }
+  const logMood = (mood, moodNote = null) => {
+    const entry = { 
+      date: new Date().toISOString(), 
+      ...mood, 
+      note: moodNote || note.trim() || null 
+    }
     const updated = [...history, entry]
     setHistory(updated)
     localStorage.setItem('moodHistory', JSON.stringify(updated))
     setSelected(mood.key)
     setTip(TIPS[mood.key])
+    setNote('')
+    setShowNoteInput(false)
+    setPendingMood(null)
+    addToast(`Mood logged: ${mood.label}`, 'success')
+  }
+
+  const handleMoodClick = (mood) => {
+    setPendingMood(mood)
+    setShowNoteInput(true)
+  }
+
+  const exportToCSV = () => {
+    if (history.length === 0) {
+      addToast('No mood data to export', 'info')
+      return
+    }
+    const headers = ['Date', 'Mood', 'Value', 'Note']
+    const rows = history.map(entry => [
+      new Date(entry.date).toLocaleString(),
+      entry.label,
+      entry.value,
+      (entry.note || '').replace(/,/g, ';')
+    ])
+    
+    const csv = [headers, ...rows].map(row => row.join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `mindmoor-mood-${new Date().toISOString().split('T')[0]}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    addToast('Exported to CSV ✓', 'success')
   }
 
   const clearHistory = () => {
-    if (window.confirm('Clear all mood history?')) {
+    if (window.confirm('Clear all mood history? This cannot be undone.')) {
       setHistory([])
       localStorage.removeItem('moodHistory')
       setSelected(null)
       setTip('')
+      setShowNoteInput(false)
+      setPendingMood(null)
+      addToast('Mood history cleared', 'info')
     }
   }
 
@@ -54,6 +99,8 @@ export default function MoodTracker() {
     if (chartInstance.current) chartInstance.current.destroy()
 
     const recent = history.slice(-14)
+    if (recent.length < 2) return
+
     chartInstance.current = new Chart(chartRef.current, {
       type: 'line',
       data: {
@@ -72,6 +119,7 @@ export default function MoodTracker() {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: true,
         plugins: { legend: { display: false } },
         scales: {
           y: {
@@ -99,9 +147,9 @@ export default function MoodTracker() {
           {MOODS.map(mood => (
             <button
               key={mood.key}
-              className={`mood-btn ${selected === mood.key ? 'selected' : ''}`}
+              className={`mood-btn ${selected === mood.key && !showNoteInput ? 'selected' : ''}`}
               style={{ '--mood-color': mood.color }}
-              onClick={() => logMood(mood)}
+              onClick={() => handleMoodClick(mood)}
             >
               <span className="mood-emoji">{mood.emoji}</span>
               <span className="mood-label">{mood.label}</span>
@@ -109,7 +157,32 @@ export default function MoodTracker() {
           ))}
         </div>
 
-        {tip && (
+        {showNoteInput && pendingMood && (
+          <div className="mt-2 fade-up">
+            <textarea
+              className="input"
+              placeholder="Add a note (optional)... What's on your mind?"
+              value={note}
+              onChange={e => setNote(e.target.value)}
+              rows={2}
+              autoFocus
+            />
+            <div className="flex gap-1 mt-1">
+              <button className="btn btn-ghost" onClick={() => {
+                setShowNoteInput(false)
+                setNote('')
+                setPendingMood(null)
+              }}>
+                Skip
+              </button>
+              <button className="btn btn-primary" onClick={() => logMood(pendingMood)}>
+                Save with note
+              </button>
+            </div>
+          </div>
+        )}
+
+        {tip && !showNoteInput && (
           <div className="mood-tip fade-up">
             <span>💡</span> {tip}
           </div>
@@ -121,7 +194,10 @@ export default function MoodTracker() {
         <div className="card mt-3 mood-chart-card">
           <div className="chart-header">
             <h2>Your Mood Trend</h2>
-            <button className="btn btn-ghost" onClick={clearHistory}>Clear History</button>
+            <div className="flex gap-1">
+              <button className="btn btn-ghost" onClick={exportToCSV}>📥 Export CSV</button>
+              <button className="btn btn-ghost" onClick={clearHistory}>Clear History</button>
+            </div>
           </div>
           <canvas ref={chartRef} />
         </div>
@@ -138,6 +214,7 @@ export default function MoodTracker() {
                 <li key={i} className="mood-history-item">
                   <span className="history-emoji">{mood?.emoji || '•'}</span>
                   <span className="history-label">{entry.label || entry.key}</span>
+                  {entry.note && <span className="history-note text-muted">📝 {entry.note.substring(0, 30)}</span>}
                   <span className="history-date text-muted">
                     {new Date(entry.date).toLocaleString()}
                   </span>
@@ -152,12 +229,10 @@ export default function MoodTracker() {
       <div className="card mt-3 mood-tips">
         <h3>Why Track Your Mood?</h3>
         <ul>
-          {[
-            'Identify emotional triggers and patterns',
-            'Recognise improvements over time',
-            'Communicate better with healthcare providers',
-            'Develop personalised coping strategies',
-          ].map(tip => <li key={tip}>{tip}</li>)}
+          <li>Identify emotional triggers and patterns</li>
+          <li>Recognise improvements over time</li>
+          <li>Communicate better with healthcare providers</li>
+          <li>Develop personalised coping strategies</li>
         </ul>
       </div>
     </div>

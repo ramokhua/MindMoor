@@ -8,12 +8,14 @@ import Exercises from './components/pages/Exercises'
 import Grounding from './components/pages/Grounding'
 import Resources from './components/pages/Resources'
 import Moira from './components/pages/Moira'
+import Dashboard from './components/pages/Dashboard'
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="mood" element={<MoodTracker />} />
         <Route path="journal" element={<Journal />} />
         <Route path="breathing" element={<Breathing />} />

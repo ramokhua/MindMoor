@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import './Moira.css'
 
-const API_URL = '/api/chat'   // proxied to Flask via vite config
+const API_URL = '/api/chat'
 
-const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'end it all', 'self harm', 'want to die']
+const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'end it all', 'self harm', 'want to die', 'want to end it', 'better off dead']
 
 const CRISIS_RESPONSE = `I'm really concerned about what you've shared. Please reach out for immediate support:
 
@@ -12,6 +12,15 @@ const CRISIS_RESPONSE = `I'm really concerned about what you've shared. Please r
 • **International:** [findahelpline.com](https://findahelpline.com)
 
 You are not alone and your life matters. 💙`
+
+const SUGGESTED_PROMPTS = [
+  "I'm feeling anxious",
+  "I can't sleep",
+  "I feel overwhelmed",
+  "I had a bad day",
+  "I need motivation",
+  "Tell me a breathing exercise",
+]
 
 function Message({ msg }) {
   return (
@@ -60,8 +69,8 @@ export default function Moira() {
   const isCrisis = (text) =>
     CRISIS_KEYWORDS.some(k => text.toLowerCase().includes(k))
 
-  const send = async () => {
-    const text = input.trim()
+  const send = async (textOverride = null) => {
+    const text = (textOverride || input).trim()
     if (!text || loading) return
 
     const userMsg = {
@@ -92,7 +101,7 @@ export default function Moira() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: text,
-          history: messages.map(m => ({ role: m.role, content: m.content }))
+          history: messages.slice(-10).map(m => ({ role: m.role, content: m.content }))
         })
       })
 
@@ -124,6 +133,38 @@ export default function Moira() {
         </div>
       </div>
 
+      {/* Suggested Prompts */}
+      <div className="suggested-prompts" style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '0.5rem',
+        marginBottom: '1rem',
+        justifyContent: 'center'
+      }}>
+        {SUGGESTED_PROMPTS.map(prompt => (
+          <button
+            key={prompt}
+            className="prompt-chip"
+            onClick={() => send(prompt)}
+            disabled={loading}
+            style={{
+              padding: '0.5rem 1rem',
+              borderRadius: '50px',
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              transition: 'all var(--transition)',
+              color: 'var(--text)'
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--border)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--surface)'}
+          >
+            {prompt}
+          </button>
+        ))}
+      </div>
+
       <div className="chat-window card">
         <div className="messages-area">
           {messages.map((msg, i) => <Message key={i} msg={msg} />)}
@@ -140,7 +181,7 @@ export default function Moira() {
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
             disabled={loading}
           />
-          <button className="btn btn-primary send-btn" onClick={send} disabled={loading || !input.trim()}>
+          <button className="btn btn-primary send-btn" onClick={() => send()} disabled={loading || !input.trim()}>
             {loading ? '…' : '↑'}
           </button>
         </div>

@@ -68,6 +68,15 @@ export default function Breathing() {
 
   useEffect(() => () => clearInterval(intervalRef.current), [])
 
+  // Track completed breathing sessions
+  useEffect(() => {
+    if (!isRunning && cycles > 0 && cycles % 4 === 0) {
+      const completedSessions = localStorage.getItem('breathingSessions')
+      const newCount = (parseInt(completedSessions) || 0) + 1
+      localStorage.setItem('breathingSessions', newCount.toString())
+    }
+  }, [cycles, isRunning])
+
   const currentPhase = isRunning ? pattern.labels[phaseIdx] : 'Ready'
   const circleScale = isRunning
     ? phaseIdx === 0 ? 1.3

@@ -176,3 +176,37 @@ h1, h2, h3, h4 {
 .flex-center { display: flex; align-items: center; justify-content: center; }
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+
+/* Dark Mode Overrides */
+.dark {
+  --light: #1a1a2e;
+  --surface: #16213e;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: #2d3748;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.dark .card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.dark .input, .dark textarea.input {
+  background: #0f172a;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.dark .btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.dark .mood-tip,
+.dark .summary {
+  background: rgba(30, 41, 59, 0.5);
+}
