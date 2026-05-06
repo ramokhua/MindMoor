@@ -11,6 +11,8 @@ const NAV_LINKS = [
   { to: '/exercises', label: 'Exercises' },
   { to: '/resources', label: 'Resources' },
   { to: '/moira', label: 'Chat with Moira' },
+  { to: '/safety-plan', label: 'Safety Plan' },
+  { to: '/privacy', label: 'Privacy' },
 ]
 
 export default function Layout() {

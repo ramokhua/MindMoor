@@ -9,6 +9,8 @@ import Grounding from './components/pages/Grounding'
 import Resources from './components/pages/Resources'
 import Moira from './components/pages/Moira'
 import Dashboard from './components/pages/Dashboard'
+import SafetyPlan from './components/pages/SafetyPlan'
+import Privacy from './components/pages/Privacy'
 
 export default function App() {
   return (
@@ -23,6 +25,8 @@ export default function App() {
         <Route path="exercises/grounding" element={<Grounding />} />
         <Route path="resources" element={<Resources />} />
         <Route path="moira" element={<Moira />} />
+        <Route path="safety-plan" element={<SafetyPlan />} />
+        <Route path="privacy" element={<Privacy />} />
       </Route>
     </Routes>
   )

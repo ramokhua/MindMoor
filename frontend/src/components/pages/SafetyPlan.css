@@ -1,0 +1,117 @@
+.safety-plan-page {
+  max-width: 800px;
+}
+
+.safety-plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.safety-plan-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.safety-plan-view .card {
+  overflow-x: auto;
+}
+
+.safety-plan-view ul {
+  padding-left: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+.safety-plan-view li {
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.contact-card {
+  padding: 0.75rem;
+  background: var(--light);
+  border-radius: var(--radius-sm);
+  margin-top: 0.5rem;
+}
+
+.contact-card:first-of-type {
+  margin-top: 1rem;
+}
+
+.contact-link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+.array-item {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  align-items: center;
+}
+
+.array-item .input {
+  flex: 1;
+}
+
+.remove-btn {
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-btn {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+
+.contact-form .remove-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.safety-plan-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .safety-plan-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .contact-form .remove-btn {
+    position: static;
+    align-self: flex-end;
+  }
+}
