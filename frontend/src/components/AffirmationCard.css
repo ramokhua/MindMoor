@@ -1,0 +1,60 @@
+.affirmation-card {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--light) 100%);
+}
+
+.affirmation-large {
+  padding: 3rem 2rem;
+}
+
+.affirmation-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.affirmation-text {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-family: var(--font-display);
+}
+
+.affirmation-large .affirmation-text {
+  font-size: 1.8rem;
+}
+
+.affirmation-meta {
+  margin-bottom: 1rem;
+}
+
+.affirmation-category {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: var(--border);
+  border-radius: 50px;
+  font-size: 0.7rem;
+  text-transform: capitalize;
+  color: var(--text-muted);
+}
+
+.affirmation-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.affirmation-actions button {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .affirmation-text {
+    font-size: 1rem;
+  }
+  .affirmation-large .affirmation-text {
+    font-size: 1.3rem;
+  }
+}

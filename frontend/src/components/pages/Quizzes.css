@@ -1,0 +1,137 @@
+.quizzes-page {
+  max-width: 800px;
+}
+
+.quiz-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.quiz-card {
+  text-align: center;
+}
+
+.quiz-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.quiz-time {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.quiz-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.quiz-question {
+  padding: 1.25rem;
+}
+
+.question-text {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.question-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+
+.quiz-option:hover {
+  background: var(--border);
+}
+
+.quiz-actions {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.quiz-result {
+  text-align: center;
+  padding: 2rem;
+}
+
+.result-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.result-severity {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0.5rem 0;
+}
+
+.result-recommendation {
+  background: var(--light);
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  margin: 1.5rem 0;
+}
+
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.result-disclaimer {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+}
+
+.quiz-history {
+  margin-top: 2rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--light);
+  border-radius: var(--radius-sm);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.history-score {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+@media (max-width: 640px) {
+  .question-options {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

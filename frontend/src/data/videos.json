@@ -1,0 +1,67 @@
+{
+  "playlists": [
+    {
+      "id": "breathing",
+      "title": "Guided Breathing Exercises",
+      "description": "Simple breathing techniques to calm your nervous system",
+      "videos": [
+        {
+          "id": "breathing-1",
+          "title": "4-7-8 Breathing Guide",
+          "youtubeId": "YnD_3FqP_Ec",
+          "duration": "2:30",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "breathing-2",
+          "title": "Box Breathing for Stress",
+          "youtubeId": "YFSc7Ck0Ao0",
+          "duration": "3:00",
+          "difficulty": "beginner"
+        }
+      ]
+    },
+    {
+      "id": "meditation",
+      "title": "Mindfulness Meditation",
+      "description": "Guided meditations for anxiety, stress, and sleep",
+      "videos": [
+        {
+          "id": "meditation-1",
+          "title": "10-Minute Mindfulness",
+          "youtubeId": "ZToicYcHIOU",
+          "duration": "10:00",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "meditation-2",
+          "title": "Body Scan Meditation",
+          "youtubeId": "iNVSFdmv7GY",
+          "duration": "15:00",
+          "difficulty": "intermediate"
+        }
+      ]
+    },
+    {
+      "id": "psychoeducation",
+      "title": "Understanding Mental Health",
+      "description": "Educational videos about depression, anxiety, and coping",
+      "videos": [
+        {
+          "id": "edu-1",
+          "title": "What is Depression?",
+          "youtubeId": "z-IR48Mb3W0",
+          "duration": "8:00",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "edu-2",
+          "title": "Understanding Anxiety",
+          "youtubeId": "rF0orQ-gpVQ",
+          "duration": "9:30",
+          "difficulty": "beginner"
+        }
+      ]
+    }
+  ]
+}

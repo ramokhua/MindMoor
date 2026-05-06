@@ -11,6 +11,9 @@ import Moira from './components/pages/Moira'
 import Dashboard from './components/pages/Dashboard'
 import SafetyPlan from './components/pages/SafetyPlan'
 import Privacy from './components/pages/Privacy'
+import Quizzes from './components/pages/Quizzes'
+import Videos from './components/pages/Videos'
+import Articles from './components/pages/Articles'
 
 export default function App() {
   return (
@@ -27,6 +30,9 @@ export default function App() {
         <Route path="moira" element={<Moira />} />
         <Route path="safety-plan" element={<SafetyPlan />} />
         <Route path="privacy" element={<Privacy />} />
+        <Route path="quizzes" element={<Quizzes />} />
+        <Route path="videos" element={<Videos />} />
+        <Route path="articles" element={<Articles />} />
       </Route>
     </Routes>
   )

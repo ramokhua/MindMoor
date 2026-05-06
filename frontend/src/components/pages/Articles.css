@@ -1,0 +1,128 @@
+.articles-page {
+  max-width: 1000px;
+}
+
+.articles-controls {
+  margin-bottom: 2rem;
+}
+
+.search-input {
+  margin-bottom: 1rem;
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 50px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 0.85rem;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.article-card {
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.article-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.article-summary {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.article-category {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  text-transform: capitalize;
+  background: var(--light);
+  color: var(--text-muted);
+}
+
+.article-category.anxiety { background: #ff9e7d20; color: #ff9e7d; }
+.article-category.depression { background: #7b9ccf20; color: #7b9ccf; }
+.article-category.sleep { background: #a6dcef20; color: #5d93a6; }
+.article-category.mindfulness { background: #10b98120; color: #10b981; }
+.article-category.resilience { background: #f6c90e20; color: #d4a800; }
+.article-category.cbt { background: #9b89b420; color: #9b89b4; }
+
+.article-read-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.article-full {
+  margin-top: 1rem;
+}
+
+.article-full h1 {
+  margin-bottom: 1rem;
+}
+
+.article-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.article-content {
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.article-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+}

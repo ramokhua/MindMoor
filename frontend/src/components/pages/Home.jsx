@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import './Home.css'
+import { useAffirmation } from '../../hooks/useAffirmation'
+import AffirmationCard from '../../components/AffirmationCard'
 
 const FEATURES = [
   { icon: '📊', title: 'Mood Tracker',        desc: 'Visualize emotional patterns over time with interactive charts.',       to: '/mood',      cta: 'Track Mood' },
@@ -16,6 +18,17 @@ const TESTIMONIALS = [
 ]
 
 export default function Home() {
+  const { affirmation, favorites, toggleFavorite, getRandomAffirmation } = useAffirmation()
+  const [currentAffirmation, setCurrentAffirmation] = useState(null)
+
+  useEffect(() => {
+    if (affirmation) setCurrentAffirmation(affirmation)
+  }, [affirmation])
+
+  const handleNext = () => {
+    setCurrentAffirmation(getRandomAffirmation())
+  }
+
   return (
     <div className="home">
       {/* Hero */}
@@ -39,6 +52,19 @@ export default function Home() {
         <h2>About MindMoor</h2>
         <p>MindMoor is a comprehensive mental wellness platform designed to help you navigate life's challenges with science-backed tools. Our mission is to make mental health support <strong>accessible, intuitive, and effective</strong> for everyone.</p>
       </section>
+
+      {/* Daily Affirmation */}
+      {currentAffirmation && (
+        <div className="page-container" style={{ maxWidth: 600 }}>
+          <AffirmationCard
+            affirmation={currentAffirmation}
+            isFavorite={favorites.includes(currentAffirmation.text)}
+            onToggleFavorite={toggleFavorite}
+            onNext={handleNext}
+            size="large"
+          />
+        </div>
+      )}
 
       {/* Features Grid */}
       <section className="features-section page-container" style={{ maxWidth: 1100 }}>

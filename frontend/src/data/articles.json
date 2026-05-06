@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "title": "Understanding Anxiety: Symptoms and Coping Strategies",
+    "category": "anxiety",
+    "readTime": 5,
+    "summary": "Learn to recognize anxiety symptoms and develop effective coping mechanisms.",
+    "content": "Anxiety is a normal human response to stress...",
+    "source": "MindMoor",
+    "url": "#"
+  },
+  {
+    "id": 2,
+    "title": "The Science of Sleep and Mental Health",
+    "category": "sleep",
+    "readTime": 6,
+    "summary": "How sleep affects your mood and what you can do to improve both.",
+    "content": "Sleep and mental health are deeply connected...",
+    "source": "MindMoor",
+    "url": "#"
+  },
+  {
+    "id": 3,
+    "title": "Building Resilience: How to Bounce Back from Adversity",
+    "category": "resilience",
+    "readTime": 7,
+    "summary": "Practical strategies to develop emotional resilience and cope with challenges.",
+    "content": "Resilience isn't something you're born with...",
+    "source": "MindMoor",
+    "url": "#"
+  },
+  {
+    "id": 4,
+    "title": "Mindfulness for Beginners",
+    "category": "mindfulness",
+    "readTime": 4,
+    "summary": "Simple mindfulness exercises to reduce stress and increase presence.",
+    "content": "Mindfulness is the practice of being present...",
+    "source": "MindMoor",
+    "url": "#"
+  },
+  {
+    "id": 5,
+    "title": "Breaking the Cycle of Negative Thinking",
+    "category": "cbt",
+    "readTime": 8,
+    "summary": "Cognitive Behavioral Therapy techniques to challenge negative thoughts.",
+    "content": "Negative thinking patterns can be changed...",
+    "source": "MindMoor",
+    "url": "#"
+  }
+]
