@@ -144,6 +144,9 @@ export default function Breathing() {
                 ? `transform ${pattern.phases[phaseIdx] || 1}s ease-in-out, background 0.5s`
                 : 'all 0.4s',
             }}
+            role="status"
+            aria-live="polite"
+            aria-label={`Breathing exercise: ${currentPhase}. ${countdown} seconds remaining.`}
           >
             <div className="circle-text">
               <span className="phase-label">{currentPhase}</span>

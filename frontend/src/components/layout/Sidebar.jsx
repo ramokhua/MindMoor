@@ -45,25 +45,45 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <>
       {/* Overlay */}
-      {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
+      {isOpen && (
+        <div 
+          className="sidebar-overlay" 
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
       
       {/* Sidebar */}
-      <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
+      <aside 
+        className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}
+        aria-label="Main navigation"
+        aria-hidden={!isOpen && window.innerWidth < 768 ? 'true' : 'false'}
+      >
         <div className="sidebar-header">
           <div className="sidebar-brand">
-            <span className="brand-icon">🧠</span>
+            <span className="brand-icon" aria-hidden="true">🧠</span>
             <span className="brand-name">MindMoor</span>
           </div>
-          <button className="sidebar-close" onClick={onClose}>✕</button>
+          <button 
+            className="sidebar-close" 
+            onClick={onClose}
+            aria-label="Close navigation menu"
+          >
+            ✕
+          </button>
         </div>
 
         <div className="sidebar-theme">
-          <button className="theme-toggle-sidebar" onClick={toggle}>
+          <button 
+            className="theme-toggle-sidebar" 
+            onClick={toggle}
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
             {isDark ? '☀️ Light Mode' : '🌙 Dark Mode'}
           </button>
         </div>
 
-        <nav className="sidebar-nav">
+        <nav className="sidebar-nav" aria-label="Navigation sections">
           {NAV_SECTIONS.map((section, idx) => (
             <div key={idx} className="nav-section">
               <div className="nav-section-title">{section.title}</div>
@@ -74,7 +94,7 @@ export default function Sidebar({ isOpen, onClose }) {
                   className={({ isActive }) => `nav-link-sidebar ${isActive ? 'active' : ''}`}
                   onClick={onClose}
                 >
-                  <span className="nav-icon">{link.icon}</span>
+                  <span className="nav-icon" aria-hidden="true">{link.icon}</span>
                   <span className="nav-label">{link.label}</span>
                 </NavLink>
               ))}
@@ -84,7 +104,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
         <div className="sidebar-footer">
           <div className="sidebar-crisis">
-            ⚠️ In crisis?<br />
+            <span aria-hidden="true">⚠️</span> In crisis?<br />
             <strong>Call 988</strong>
           </div>
           <p className="sidebar-version">v1.0.0</p>

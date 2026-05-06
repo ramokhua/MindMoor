@@ -5,16 +5,20 @@ import App from './App'
 import { ThemeProvider } from './context/ThemeContext'
 import './styles/globals.css'
 
-// Register Service Worker for PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then(registration => {
-      console.log('SW registered: ', registration)
-    }).catch(error => {
-      console.log('SW registration failed: ', error)
-    })
-  })
+// Handle keyboard navigation focus visibility
+const handleFirstTab = (e) => {
+  if (e.key === 'Tab') {
+    document.body.classList.add('user-is-tabbing')
+    window.removeEventListener('keydown', handleFirstTab)
+  }
 }
+
+window.addEventListener('keydown', handleFirstTab)
+
+// Remove tabbing class on mouse click
+document.addEventListener('mousedown', () => {
+  document.body.classList.remove('user-is-tabbing')
+})
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

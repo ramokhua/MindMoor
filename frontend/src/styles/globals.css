@@ -210,3 +210,141 @@ h1, h2, h3, h4 {
 .dark .summary {
   background: rgba(30, 41, 59, 0.5);
 }
+
+/* ─── Accessibility: High Contrast Mode ─────────────────────────── */
+.high-contrast {
+  --primary: #0000ff;
+  --primary-dk: #0000cc;
+  --secondary: #00ffff;
+  --dark: #000000;
+  --light: #ffffff;
+  --accent: #ff0000;
+  --accent-dk: #cc0000;
+  --text: #000000;
+  --text-muted: #333333;
+  --border: #000000;
+  --surface: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.2);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.high-contrast .card,
+.high-contrast .btn-ghost,
+.high-contrast .input {
+  border-width: 2px;
+}
+
+.high-contrast .btn-primary {
+  background: #0000ff;
+  border: 2px solid #000000;
+}
+
+.high-contrast .btn-accent {
+  background: #ff0000;
+  border: 2px solid #000000;
+  color: #ffffff;
+}
+
+/* ─── Accessibility: Focus Styles ───────────────────────────────── */
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Skip to content link - for keyboard users */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  z-index: 10000;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .fade-up,
+  .card:hover,
+  .btn:hover {
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  .hero-waves svg,
+  .ripple {
+    animation: none !important;
+  }
+}
+
+/* Font size scaling support */
+@media (min-width: 100px) {
+  html {
+    font-size: 100%;
+  }
+}
+
+/* Ensure containers don't overflow when font is larger */
+.page-container {
+  max-width: 900px;
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+
+img, svg, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Screen reader only - visually hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Show focus ring only when using keyboard */
+body.user-is-tabbing *:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+body.user-is-tabbing button:focus,
+body.user-is-tabbing a:focus,
+body.user-is-tabbing input:focus,
+body.user-is-tabbing textarea:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}

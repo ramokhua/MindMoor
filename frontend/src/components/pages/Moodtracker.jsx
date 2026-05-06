@@ -159,6 +159,8 @@ export default function MoodTracker() {
               className={`mood-btn ${selected === mood.key && !showNoteInput ? 'selected' : ''}`}
               style={{ '--mood-color': mood.color }}
               onClick={() => handleMoodClick(mood)}
+              aria-label={`Log mood: ${mood.label}`}
+              aria-pressed={selected === mood.key}
             >
               <span className="mood-emoji">{mood.emoji}</span>
               <span className="mood-label">{mood.label}</span>
