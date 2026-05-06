@@ -1,0 +1,76 @@
+.connection-status {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  z-index: 900;
+}
+
+.connection-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all var(--transition);
+}
+
+.connection-status.online .connection-indicator {
+  background: rgba(16, 185, 129, 0.9);
+  color: white;
+}
+
+.connection-status.offline .connection-indicator {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+}
+
+.connection-icon {
+  font-size: 1rem;
+}
+
+.connection-text {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.connection-details {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  min-width: 200px;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.connection-details p {
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  width: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .connection-status {
+    top: auto;
+    bottom: 80px;
+    right: 20px;
+  }
+}

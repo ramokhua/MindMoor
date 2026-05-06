@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './Breathing.css'
+import { saveBreathingOffline } from '../../services/offlineStorage'
 import { useGamification } from '../../hooks/useGamification'
 
 const PATTERNS = {
@@ -67,11 +68,13 @@ export default function Breathing() {
           setCycles(cycleCount)
           // Track session completion after full cycles
           if (cycleCount === 4) {
-            const newCount = sessionCount + 1
-            setSessionCount(newCount)
-            localStorage.setItem('breathingSessions', newCount.toString())
-            recordAction('breathing')
-            syncAndCheck()
+            const result = saveBreathingOffline({ completedAt: new Date().toISOString() })
+            if (result.success) {
+              setSessionCount(result.data)
+              recordAction('breathing')
+              syncAndCheck()
+            }
+            break
           }
         }
         setPhaseIdx(activePhases[ci].i)

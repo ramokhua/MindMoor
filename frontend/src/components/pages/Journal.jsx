@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useToast } from '../../hooks/useToast'
 import { useGamification } from '../../hooks/useGamification'
+import { saveJournalOffline } from '../../services/offlineStorage'
 import './Journal.css'
 
 const GUIDED_PROMPTS = [
@@ -38,6 +39,7 @@ export default function Journal() {
       addToast('Please write something before saving', 'error')
       return
     }
+    
     const entry = { 
       id: Date.now(), 
       date: new Date().toISOString(), 
@@ -45,15 +47,20 @@ export default function Journal() {
       wordCount: wordCount,
       prompt: selectedPrompt || null
     }
-    const updated = [entry, ...entries]
-    setEntries(updated)
-    localStorage.setItem('journal', JSON.stringify(updated))
-    setText('')
-    setSelectedPrompt('')
-    addToast(`Entry saved! (${wordCount} words)`, 'success')
-
-    recordAction('journal')
-    syncAndCheck()
+    
+    // Use offline storage
+    const result = saveJournalOffline(entry)
+    
+    if (result.success) {
+      setEntries(result.data)
+      setText('')
+      setSelectedPrompt('')
+      recordAction('journal')
+      syncAndCheck()
+      addToast(`Entry saved! (${wordCount} words)`, 'success')
+    } else {
+      addToast('Failed to save entry. Please try again.', 'error')
+    }
   }
 
   const deleteEntry = (id) => {

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet, Link } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import AccessibilityPanel from '../AccessibilityPanel'
+import ConnectionStatus from '../ConnectionStatus'
 import './Layout.css'
 
 export default function Layout() {

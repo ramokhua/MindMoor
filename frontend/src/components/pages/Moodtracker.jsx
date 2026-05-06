@@ -4,6 +4,7 @@ import { useToast } from '../../hooks/useToast'
 import { useStreak } from '../../hooks/useStreak'
 import CelebrationModal from '../../components/CelebrationModal'
 import { useGamification } from '../../hooks/useGamification'
+import { saveMoodOffline } from '../../services/offlineStorage'
 import './MoodTracker.css'
 
 Chart.register(...registerables)
@@ -47,19 +48,26 @@ export default function MoodTracker() {
       ...mood, 
       note: moodNote || note.trim() || null 
     }
-    const updated = [...history, entry]
-    setHistory(updated)
-    localStorage.setItem('moodHistory', JSON.stringify(updated))
-    setSelected(mood.key)
-    setTip(TIPS[mood.key])
-    setNote('')
-    setShowNoteInput(false)
-    setPendingMood(null)
-    updateStreak()
-    recordAction('mood')
-    syncAndCheck()
     
-    addToast(`Mood logged: ${mood.label}`, 'success')
+    // Use offline storage
+    const result = saveMoodOffline(entry)
+    
+    if (result.success) {
+      setHistory(result.data)
+      setSelected(mood.key)
+      setTip(TIPS[mood.key])
+      setNote('')
+      setShowNoteInput(false)
+      setPendingMood(null)
+      
+      // Record action for gamification
+      recordAction('mood')
+      syncAndCheck()
+      
+      addToast(`Mood logged: ${mood.label}`, 'success')
+    } else {
+      addToast('Failed to save mood. Please try again.', 'error')
+    }
   }
 
   const handleMoodClick = (mood) => {
