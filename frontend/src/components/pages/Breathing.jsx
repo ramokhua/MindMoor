@@ -16,9 +16,11 @@ export default function Breathing() {
   const [phaseIdx, setPhaseIdx] = useState(0)
   const [countdown, setCountdown] = useState(0)
   const [cycles, setCycles] = useState(0)
+  const [sessionCount, setSessionCount] = useState(() => 
+    parseInt(localStorage.getItem('breathingSessions') || '0')
+  )
 
   const intervalRef = useRef(null)
-  const phaseStart = useRef(null)
 
   const pattern = PATTERNS[patternKey]
   const activePhaseDurations = pattern.phases.filter(p => p > 0)
@@ -30,12 +32,11 @@ export default function Breathing() {
     setIsRunning(false)
     setPhaseIdx(0)
     setCountdown(0)
-    setCycles(0)
   }
 
   const start = () => {
     setIsRunning(true)
-    let ci = 0            // active phase index (skipping zero-duration ones)
+    let ci = 0
     let cycleCount = 0
 
     const getActivePhases = () => PATTERNS[patternKey].phases
@@ -58,24 +59,25 @@ export default function Breathing() {
       if (elapsed >= currentPhase.dur) {
         elapsed = 0
         ci = (ci + 1) % activePhases.length
-        if (ci === 0) cycleCount++
-        setCycles(cycleCount)
+        if (ci === 0) {
+          cycleCount++
+          setCycles(cycleCount)
+          // Track session completion after full cycles
+          if (cycleCount === 4) {
+            const newCount = sessionCount + 1
+            setSessionCount(newCount)
+            localStorage.setItem('breathingSessions', newCount.toString())
+          }
+        }
         setPhaseIdx(activePhases[ci].i)
         setCountdown(activePhases[ci].dur)
       }
     }, 100)
   }
 
-  useEffect(() => () => clearInterval(intervalRef.current), [])
-
-  // Track completed breathing sessions
   useEffect(() => {
-    if (!isRunning && cycles > 0 && cycles % 4 === 0) {
-      const completedSessions = localStorage.getItem('breathingSessions')
-      const newCount = (parseInt(completedSessions) || 0) + 1
-      localStorage.setItem('breathingSessions', newCount.toString())
-    }
-  }, [cycles, isRunning])
+    return () => clearInterval(intervalRef.current)
+  }, [])
 
   const currentPhase = isRunning ? pattern.labels[phaseIdx] : 'Ready'
   const circleScale = isRunning
@@ -85,10 +87,31 @@ export default function Breathing() {
     : 1
   const circleColor = isRunning ? PHASE_COLORS[phaseIdx] : 'var(--primary)'
 
+  // Calculate weekly progress
+  const weeklyGoal = 7
+  const weeklyProgress = Math.min((sessionCount % 7) / weeklyGoal * 100, 100)
+
   return (
     <div className="page-container breathing-page">
       <h1 className="page-title">Breathing Exercises</h1>
       <p className="page-subtitle">Choose a pattern and follow the animation to calm your nervous system.</p>
+
+      {/* Session stats */}
+      <div className="card" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary)' }}>{sessionCount}</div>
+            <div className="text-muted">Total Sessions</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary)' }}>{weeklyProgress === 100 ? '✓' : `${Math.floor(weeklyProgress)}%`}</div>
+            <div className="text-muted">Weekly Goal</div>
+            <div style={{ width: '100px', height: '4px', background: 'var(--border)', borderRadius: '2px', marginTop: '0.25rem' }}>
+              <div style={{ width: `${weeklyProgress}%`, height: '100%', background: 'var(--primary)', borderRadius: '2px' }} />
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="card breathing-card">
         {/* Pattern selector */}
@@ -134,7 +157,7 @@ export default function Breathing() {
 
         {/* Cycle counter */}
         {isRunning && (
-          <p className="cycle-counter text-muted">Cycle {cycles + 1}</p>
+          <p className="cycle-counter text-muted">Cycle {Math.floor(cycles / 4) + 1} of 4</p>
         )}
 
         {/* Controls */}
@@ -142,7 +165,7 @@ export default function Breathing() {
           className={`btn ${isRunning ? 'btn-ghost' : 'btn-primary'} btn-start`}
           onClick={isRunning ? stop : start}
         >
-          {isRunning ? '⏹ Stop' : '▶ Start'}
+          {isRunning ? '⏹ Stop' : '▶ Start Session'}
         </button>
 
         {/* Phase guide */}
@@ -164,6 +187,7 @@ export default function Breathing() {
           <li>Breathe through your nose during inhale phases</li>
           <li>Exhale through slightly parted lips</li>
           <li>Practice for at least 3–5 minutes daily</li>
+          <li>Complete 4 cycles = 1 session tracked</li>
         </ul>
       </div>
     </div>
