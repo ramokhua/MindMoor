@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { Chart, registerables } from 'chart.js'
 import { useToast } from '../../hooks/useToast'
+import { useStreak } from '../../hooks/useStreak'
+import CelebrationModal from '../../components/CelebrationModal'
 import './MoodTracker.css'
 
 Chart.register(...registerables)
@@ -26,6 +28,7 @@ const TIPS = {
 export default function MoodTracker() {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
+  const { streak, bestStreak, updateStreak, showCelebration, resetCelebration } = useStreak()
   const { addToast } = useToast()
   const [history, setHistory] = useState(() =>
     JSON.parse(localStorage.getItem('moodHistory') || '[]')
@@ -50,6 +53,7 @@ export default function MoodTracker() {
     setNote('')
     setShowNoteInput(false)
     setPendingMood(null)
+    updateStreak()
     addToast(`Mood logged: ${mood.label}`, 'success')
   }
 
@@ -223,6 +227,10 @@ export default function MoodTracker() {
             })}
           </ul>
         </div>
+      )}
+
+      {showCelebration && (
+        <CelebrationModal streak={streak} onClose={resetCelebration} />
       )}
 
       {/* Tips section */}
