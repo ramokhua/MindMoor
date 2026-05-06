@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useToast } from '../../hooks/useToast'
+import { useGamification } from '../../hooks/useGamification'
 import './Journal.css'
 
 const GUIDED_PROMPTS = [
@@ -29,6 +30,8 @@ export default function Journal() {
   const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length
   const wordProgress = Math.min((wordCount / wordGoal) * 100, 100)
 
+  const { recordAction, syncAndCheck } = useGamification()
+
   const saveEntry = (e) => {
     e.preventDefault()
     if (!text.trim()) {
@@ -48,6 +51,9 @@ export default function Journal() {
     setText('')
     setSelectedPrompt('')
     addToast(`Entry saved! (${wordCount} words)`, 'success')
+
+    recordAction('journal')
+    syncAndCheck()
   }
 
   const deleteEntry = (id) => {

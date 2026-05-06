@@ -14,6 +14,8 @@ import Privacy from './components/pages/Privacy'
 import Quizzes from './components/pages/Quizzes'
 import Videos from './components/pages/Videos'
 import Articles from './components/pages/Articles'
+import Achievements from './components/pages/Achievements'
+import Reminders from './components/pages/Reminders'
 
 export default function App() {
   return (
@@ -33,6 +35,8 @@ export default function App() {
         <Route path="quizzes" element={<Quizzes />} />
         <Route path="videos" element={<Videos />} />
         <Route path="articles" element={<Articles />} />
+        <Route path="achievements" element={<Achievements />} />
+        <Route path="reminders" element={<Reminders />} />
       </Route>
     </Routes>
   )

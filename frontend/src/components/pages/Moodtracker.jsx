@@ -3,6 +3,7 @@ import { Chart, registerables } from 'chart.js'
 import { useToast } from '../../hooks/useToast'
 import { useStreak } from '../../hooks/useStreak'
 import CelebrationModal from '../../components/CelebrationModal'
+import { useGamification } from '../../hooks/useGamification'
 import './MoodTracker.css'
 
 Chart.register(...registerables)
@@ -38,6 +39,7 @@ export default function MoodTracker() {
   const [note, setNote] = useState('')
   const [showNoteInput, setShowNoteInput] = useState(false)
   const [pendingMood, setPendingMood] = useState(null)
+  const { recordAction, syncAndCheck, recentBadge, levelUp } = useGamification()
 
   const logMood = (mood, moodNote = null) => {
     const entry = { 
@@ -54,6 +56,9 @@ export default function MoodTracker() {
     setShowNoteInput(false)
     setPendingMood(null)
     updateStreak()
+    recordAction('mood')
+    syncAndCheck()
+    
     addToast(`Mood logged: ${mood.label}`, 'success')
   }
 
@@ -243,6 +248,18 @@ export default function MoodTracker() {
           <li>Develop personalised coping strategies</li>
         </ul>
       </div>
+
+      {recentBadge && (
+        <div className="toast-notification earned-badge-toast">
+          🎉 New Badge: {recentBadge.name}! 🎉
+        </div>
+      )}
+
+      {levelUp && (
+        <div className="toast-notification level-up-toast">
+          🎉 Level Up! You're now a {levelUp.title}! 🎉
+        </div>
+      )}
     </div>
   )
 }

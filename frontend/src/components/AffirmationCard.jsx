@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import './AffirmationCard.css'
+import { useGamification } from '../hooks/useGamification'
 
 export default function AffirmationCard({ affirmation, isFavorite, onToggleFavorite, onNext, size = 'normal' }) {
   const [copied, setCopied] = useState(false)
+  const { recordAction, syncAndCheck } = useGamification()
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(affirmation.text)

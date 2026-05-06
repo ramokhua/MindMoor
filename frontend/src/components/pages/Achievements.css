@@ -1,0 +1,142 @@
+.achievements-page {
+  max-width: 800px;
+}
+
+.level-card {
+  text-align: center;
+}
+
+.level-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.level-badge {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.level-number {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stat-card {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.stat-emoji {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: block;
+  color: var(--primary);
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.badges-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.badge-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.badge-card.earned {
+  border-left: 3px solid var(--primary);
+}
+
+.badge-card.locked {
+  opacity: 0.6;
+}
+
+.badge-icon {
+  font-size: 2rem;
+  width: 48px;
+  text-align: center;
+}
+
+.badge-info {
+  flex: 1;
+}
+
+.badge-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.badge-description {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.badge-status {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 50px;
+}
+
+.badge-status.earned {
+  background: #10b98120;
+  color: #10b981;
+}
+
+.badge-status.locked {
+  background: var(--border);
+  color: var(--text-muted);
+}
+
+.section-title {
+  margin: 1.5rem 0 1rem;
+}

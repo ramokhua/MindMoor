@@ -5,6 +5,7 @@ import {
   calculatePHQ9, calculateGAD7 
 } from '../../utils/quizScoring'
 import './Quizzes.css'
+import { useGamification } from '../../hooks/useGamification'
 
 export default function Quizzes() {
   const { addToast } = useToast()
@@ -14,6 +15,8 @@ export default function Quizzes() {
   const [history, setHistory] = useState(() => 
     JSON.parse(localStorage.getItem('quizHistory') || '[]')
   )
+
+  const { recordAction, syncAndCheck } = useGamification()
 
   const startQuiz = (quizId) => {
     const questions = quizId === 'phq9' ? PHQ9_QUESTIONS : GAD7_QUESTIONS
@@ -56,6 +59,9 @@ export default function Quizzes() {
     localStorage.setItem('quizHistory', JSON.stringify(updatedHistory))
     setResult(calculation)
     addToast(`${quizName} completed!`, 'success')
+
+    recordAction('quiz')
+    syncAndCheck()
   }
 
   const resetQuiz = () => {

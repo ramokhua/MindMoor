@@ -1,81 +1,46 @@
 import { useState } from 'react'
-import { Outlet, NavLink, Link } from 'react-router-dom'
-import { useTheme } from '../../context/ThemeContext'
+import { Outlet, Link } from 'react-router-dom'
+import Sidebar from './Sidebar'
 import './Layout.css'
 
-const NAV_LINKS = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/mood', label: 'Mood Tracker' },
-  { to: '/journal', label: 'Journal' },
-  { to: '/breathing', label: 'Breathing' },
-  { to: '/exercises', label: 'Exercises' },
-  { to: '/quizzes', label: 'Quizzes' },
-  { to: '/videos', label: 'Videos' },
-  { to: '/articles', label: 'Articles' },
-  { to: '/resources', label: 'Resources' },
-  { to: '/moira', label: 'Chat with Moira' },
-  { to: '/safety-plan', label: 'Safety Plan' },
-  { to: '/privacy', label: 'Privacy' },
-]
-
 export default function Layout() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const { isDark, toggle } = useTheme()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <div className="app-shell">
+      {/* Hamburger Menu Button (Mobile Only) */}
       <header className="site-header">
-        <nav className="site-nav">
-          <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
-            <div className="brand-text">
-              <span className="brand-name">MindMoor</span>
-              <span className="brand-tagline">Anchor Your Thoughts, Steady Your Soul</span>
-            </div>
+        <div className="site-nav">
+          <button 
+            className="hamburger-menu" 
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <Link to="/" className="brand mobile-brand" onClick={() => setSidebarOpen(false)}>
+            <span className="brand-icon">🧠</span>
+            <span className="brand-name">MindMoor</span>
           </Link>
-
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <button
-              onClick={toggle}
-              className="theme-toggle"
-              aria-label="Toggle dark mode"
-            >
-              {isDark ? '☀️' : '🌙'}
-            </button>
-
-            <button
-              className={`menu-toggle ${menuOpen ? 'open' : ''}`}
-              onClick={() => setMenuOpen(v => !v)}
-              aria-label="Toggle menu"
-            >
-              <span /><span /><span />
-            </button>
-          </div>
-
-          <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
-            {NAV_LINKS.map(({ to, label }) => (
-              <li key={to}>
-                <NavLink
-                  to={to}
-                  className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        </div>
       </header>
 
+      {/* Sidebar */}
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* Main Content */}
       <main className="site-main">
         <Outlet />
       </main>
 
-      <footer className="site-footer">
+      {/* Footer (mobile only, desktop has crisis in sidebar) */}
+      <footer className="site-footer mobile-only">
         <div className="footer-inner">
           <p>© 2025 MindMoor. All rights reserved.</p>
           <p className="footer-crisis">
-            In crisis? Contact your local helpline or call <strong>988</strong> (US Suicide &amp; Crisis Lifeline).
+            In crisis? Call <strong>988</strong>
           </p>
         </div>
       </footer>

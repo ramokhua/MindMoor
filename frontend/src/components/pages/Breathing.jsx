@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './Breathing.css'
+import { useGamification } from '../../hooks/useGamification'
 
 const PATTERNS = {
   '478':  { name: '4-7-8 Breathing',     phases: [4, 7, 8, 0],  labels: ['Inhale', 'Hold', 'Exhale', ''] },
@@ -19,6 +20,8 @@ export default function Breathing() {
   const [sessionCount, setSessionCount] = useState(() => 
     parseInt(localStorage.getItem('breathingSessions') || '0')
   )
+
+  const { recordAction, syncAndCheck } = useGamification()
 
   const intervalRef = useRef(null)
 
@@ -67,6 +70,8 @@ export default function Breathing() {
             const newCount = sessionCount + 1
             setSessionCount(newCount)
             localStorage.setItem('breathingSessions', newCount.toString())
+            recordAction('breathing')
+            syncAndCheck()
           }
         }
         setPhaseIdx(activePhases[ci].i)
