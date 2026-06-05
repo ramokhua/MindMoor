@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import Home from './components/pages/Home'
-import MoodTracker from './components/pages/MoodTracker'
+import MoodTracker from './components/pages/Moodtracker'
 import Journal from './components/pages/Journal'
 import Breathing from './components/pages/Breathing'
 import Exercises from './components/pages/Exercises'
