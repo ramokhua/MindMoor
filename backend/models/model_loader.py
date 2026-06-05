@@ -14,7 +14,7 @@ _model     = None
 _pipeline  = None
 
 # Base model to use when no fine-tuned version exists
-BASE_MODEL = os.getenv("BASE_MODEL", "facebook/blenderbot-400M-distill")
+BASE_MODEL = os.getenv("BASE_MODEL", "microsoft/DialoGPT-small")
 FINE_TUNED_DIR = Path(os.getenv("FINE_TUNED_DIR", "./models/moira-finetuned"))
 
 
