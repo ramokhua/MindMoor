@@ -1,0 +1,43 @@
+{
+  "functions": {
+    "backend/vercel_app.py": {
+      "runtime": "python3.12",
+      "maxDuration": 10
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/backend/vercel_app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/dist/$1"
+    }
+  ],
+  "builds": [
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "frontend/dist",
+        "buildCommand": "cd frontend && npm install && npm run build"
+      }
+    },
+    {
+      "src": "backend/vercel_app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
+      ]
+    }
+  ]
+}
