@@ -74,7 +74,9 @@ export default function Breathing() {
               recordAction('breathing')
               syncAndCheck()
             }
-            break
+            clearInterval(intervalRef.current)
+            setIsRunning(false)
+            return
           }
         }
         setPhaseIdx(activePhases[ci].i)
