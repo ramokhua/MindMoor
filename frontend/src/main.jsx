@@ -20,9 +20,6 @@ document.addEventListener('mousedown', () => {
   document.body.classList.remove('user-is-tabbing')
 })
 
-// Initialize offline sync manager
-setupAutoSync()
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider>

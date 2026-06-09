@@ -34,3 +34,6 @@ Thumbs.db
 coverage/
 *.coverage
 *.pytest_cache/
+
+# Local Netlify folder
+.netlify

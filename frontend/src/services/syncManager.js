@@ -4,10 +4,7 @@ let isSyncing = false
 
 // Simulate API call - replace with actual backend endpoint
 async function syncToServer(item) {
-  // This would be a real API call in production
   console.log(`Syncing ${item.type}:`, item.data)
-  
-  // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, 500))
   
   // Simulate occasional failure for retry testing
@@ -37,7 +34,6 @@ export async function processSyncQueue() {
       console.error(`Failed to sync ${item.type}:`, error)
       incrementRetry(item.id)
       
-      // Remove if retried too many times
       if (item.retryCount >= 5) {
         console.warn(`Removing failed item after 5 retries:`, item.id)
         removeFromSyncQueue(item.id)
@@ -46,8 +42,6 @@ export async function processSyncQueue() {
   }
   
   isSyncing = false
-  
-  // Dispatch event for UI updates
   window.dispatchEvent(new Event('sync-complete'))
 }
 

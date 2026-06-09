@@ -59,12 +59,13 @@ def chat():
 
     # Generate response
     try:
-        pipe    = get_pipeline()
-        prompt  = build_prompt(user_message, history)
+        pipe = get_pipeline()
+        prompt = build_prompt(user_message, history)
         outputs = pipe(prompt)
 
         raw_text = outputs[0]["generated_text"]
-        response = clean_response(raw_text)
+        # IMPORTANT: Pass user_message to clean_response for keyword detection
+        response = clean_response(raw_text, user_message=user_message)
 
         return jsonify({
             "response": response,
@@ -73,7 +74,8 @@ def chat():
 
     except Exception as exc:
         logger.error(f"Model inference error: {exc}", exc_info=True)
+        # Also pass user_message to fallback for context-aware responses
         return jsonify({
-            "response": get_fallback(),
+            "response": get_fallback(user_message=user_message),
             "source": "fallback",
         })

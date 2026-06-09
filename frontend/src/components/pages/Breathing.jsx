@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import './Breathing.css'
-import { saveBreathingOffline } from '../../services/offlineStorage'
 import { useGamification } from '../../hooks/useGamification'
 
 const PATTERNS = {
@@ -23,12 +22,9 @@ export default function Breathing() {
   )
 
   const { recordAction, syncAndCheck } = useGamification()
-
   const intervalRef = useRef(null)
 
   const pattern = PATTERNS[patternKey]
-  const activePhaseDurations = pattern.phases.filter(p => p > 0)
-  const activePhaseLabels = pattern.labels.filter((_, i) => pattern.phases[i] > 0)
   const activePhaseIndexes = pattern.phases.map((p, i) => p > 0 ? i : null).filter(i => i !== null)
 
   const stop = () => {
@@ -36,6 +32,7 @@ export default function Breathing() {
     setIsRunning(false)
     setPhaseIdx(0)
     setCountdown(0)
+    setCycles(0)
   }
 
   const start = () => {
@@ -63,28 +60,36 @@ export default function Breathing() {
       if (elapsed >= currentPhase.dur) {
         elapsed = 0
         ci = (ci + 1) % activePhases.length
+        
         if (ci === 0) {
           cycleCount++
           setCycles(cycleCount)
-          // Track session completion after full cycles
+          
           if (cycleCount === 4) {
-            const result = saveBreathingOffline({ completedAt: new Date().toISOString() })
-            if (result.success) {
-              setSessionCount(result.data)
-              recordAction('breathing')
-              syncAndCheck()
-            }
-            break
+            const newCount = sessionCount + 1
+            setSessionCount(newCount)
+            localStorage.setItem('breathingSessions', newCount.toString())
+            recordAction('breathing')
+            syncAndCheck()
+            stop()
+            return
           }
         }
-        setPhaseIdx(activePhases[ci].i)
-        setCountdown(activePhases[ci].dur)
+        
+        if (intervalRef.current) {
+          setPhaseIdx(activePhases[ci].i)
+          setCountdown(activePhases[ci].dur)
+        }
       }
     }, 100)
   }
 
   useEffect(() => {
-    return () => clearInterval(intervalRef.current)
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
   }, [])
 
   const currentPhase = isRunning ? pattern.labels[phaseIdx] : 'Ready'
@@ -95,7 +100,6 @@ export default function Breathing() {
     : 1
   const circleColor = isRunning ? PHASE_COLORS[phaseIdx] : 'var(--primary)'
 
-  // Calculate weekly progress
   const weeklyGoal = 7
   const weeklyProgress = Math.min((sessionCount % 7) / weeklyGoal * 100, 100)
 
@@ -104,7 +108,6 @@ export default function Breathing() {
       <h1 className="page-title">Breathing Exercises</h1>
       <p className="page-subtitle">Choose a pattern and follow the animation to calm your nervous system.</p>
 
-      {/* Session stats */}
       <div className="card" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
         <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
@@ -122,7 +125,6 @@ export default function Breathing() {
       </div>
 
       <div className="card breathing-card">
-        {/* Pattern selector */}
         <div className="pattern-grid">
           {Object.entries(PATTERNS).map(([key, p]) => (
             <button
@@ -136,7 +138,6 @@ export default function Breathing() {
           ))}
         </div>
 
-        {/* Circle */}
         <div className="circle-container">
           <div
             className="breath-circle"
@@ -157,7 +158,6 @@ export default function Breathing() {
             </div>
           </div>
 
-          {/* Ripples */}
           {isRunning && phaseIdx === 0 && (
             <>
               <div className="ripple ripple-1" />
@@ -166,12 +166,10 @@ export default function Breathing() {
           )}
         </div>
 
-        {/* Cycle counter */}
         {isRunning && (
           <p className="cycle-counter text-muted">Cycle {Math.floor(cycles / 4) + 1} of 4</p>
         )}
 
-        {/* Controls */}
         <button
           className={`btn ${isRunning ? 'btn-ghost' : 'btn-primary'} btn-start`}
           onClick={isRunning ? stop : start}
@@ -179,7 +177,6 @@ export default function Breathing() {
           {isRunning ? '⏹ Stop' : '▶ Start Session'}
         </button>
 
-        {/* Phase guide */}
         <div className="phase-guide">
           {activePhaseIndexes.map((pi, idx) => (
             <div key={pi} className={`phase-step ${isRunning && phaseIdx === pi ? 'active' : ''}`}>
