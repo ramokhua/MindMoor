@@ -1,43 +1,82 @@
-import { Routes, Route } from 'react-router-dom'
-import Layout from './components/layout/Layout'
-import Home from './components/pages/Home'
-import MoodTracker from './components/pages/MoodTracker'
-import Journal from './components/pages/Journal'
-import Breathing from './components/pages/Breathing'
-import Exercises from './components/pages/Exercises'
-import Grounding from './components/pages/Grounding'
-import Resources from './components/pages/Resources'
-import Moira from './components/pages/Moira'
-import Dashboard from './components/pages/Dashboard'
-import SafetyPlan from './components/pages/SafetyPlan'
-import Privacy from './components/pages/Privacy'
-import Quizzes from './components/pages/Quizzes'
-import Videos from './components/pages/Videos'
-import Articles from './components/pages/Articles'
-import Achievements from './components/pages/Achievements'
-import Reminders from './components/pages/Reminders'
+import { useState, useRef, useEffect } from 'react'
+import './App.css'
+import ChatMessage from './components/ChatMessage'
+import ChatInput from './components/ChatInput'
 
-export default function App() {
+function App() {
+  const [messages, setMessages] = useState([
+    { id: 1, text: 'Hi! I\'m MindMoor, your AI companion. How can I help you today?', sender: 'bot' }
+  ])
+  const [loading, setLoading] = useState(false)
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  const handleSendMessage = async (text) => {
+    // Add user message
+    const userMessage = {
+      id: messages.length + 1,
+      text,
+      sender: 'user'
+    }
+    setMessages(prev => [...prev, userMessage])
+    setLoading(true)
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      })
+
+      if (!response.ok) throw new Error('Failed to get response')
+      
+      const data = await response.json()
+      const botMessage = {
+        id: messages.length + 2,
+        text: data.response || 'Sorry, I couldn\'t generate a response.',
+        sender: 'bot'
+      }
+      setMessages(prev => [...prev, botMessage])
+    } catch (error) {
+      console.error('Error:', error)
+      const errorMessage = {
+        id: messages.length + 2,
+        text: 'Sorry, there was an error connecting to the server.',
+        sender: 'bot'
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="mood" element={<MoodTracker />} />
-        <Route path="journal" element={<Journal />} />
-        <Route path="breathing" element={<Breathing />} />
-        <Route path="exercises" element={<Exercises />} />
-        <Route path="exercises/grounding" element={<Grounding />} />
-        <Route path="resources" element={<Resources />} />
-        <Route path="moira" element={<Moira />} />
-        <Route path="safety-plan" element={<SafetyPlan />} />
-        <Route path="privacy" element={<Privacy />} />
-        <Route path="quizzes" element={<Quizzes />} />
-        <Route path="videos" element={<Videos />} />
-        <Route path="articles" element={<Articles />} />
-        <Route path="achievements" element={<Achievements />} />
-        <Route path="reminders" element={<Reminders />} />
-      </Route>
-    </Routes>
+    <div className="app-container">
+      <div className="chat-wrapper">
+        <div className="chat-header">
+          <h1>MindMoor</h1>
+          <p>Your AI Conversational Companion</p>
+        </div>
+        
+        <div className="messages-container">
+          {messages.map(msg => (
+            <ChatMessage key={msg.id} message={msg} />
+          ))}
+          {loading && <div className="loading">MindMoor is thinking...</div>}
+          <div ref={messagesEndRef} />
+        </div>
+        
+        <ChatInput onSendMessage={handleSendMessage} disabled={loading} />
+      </div>
+    </div>
   )
 }
+
+export default App
