@@ -1,11 +1,14 @@
 {
-  "buildCommand": "cd frontend && node ./node_modules/vite/bin/vite.js build",
+  "buildCommand": "cd frontend && npm ci && npm run build",
   "outputDirectory": "frontend/dist",
-  "installCommand": "cd frontend && npm install",
+  "installCommand": "cd frontend && npm ci",
+  "env": {
+    "NODE_VERSION": "18"
+  },
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/"
+      "source": "/:path*",
+      "destination": "/index.html"
     }
   ]
 }
