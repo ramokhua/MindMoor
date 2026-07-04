@@ -1,0 +1,42 @@
+# Virtual Environment
+venv/
+.venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Model cache (optional - depends on your setup)
+models/moira-finetuned/
+models/.cache/
