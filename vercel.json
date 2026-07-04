@@ -1,9 +1,10 @@
 {
-  "buildCommand": "cd frontend && npm ci && npm run build",
-  "outputDirectory": "frontend/dist",
-  "installCommand": "cd frontend && npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "root": "frontend",
   "env": {
-    "NODE_VERSION": "18"
+    "NODE_VERSION": "24"
   },
   "rewrites": [
     {
