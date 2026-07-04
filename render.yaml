@@ -30,6 +30,10 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://mindmoor-1.onrender.com
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
     routes:
       - type: rewrite
         source: /*
