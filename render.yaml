@@ -1,5 +1,4 @@
 services:
-  # Backend API Service
   - type: web
     name: mindmoor-backend
     rootDir: backend
@@ -23,7 +22,6 @@ services:
         value: "60"
     healthCheckPath: /api/health
 
-  # Frontend Static Site
   - type: static
     name: mindmoor-frontend
     rootDir: frontend
