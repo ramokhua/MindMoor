@@ -1,82 +1,44 @@
-import { useState, useRef, useEffect } from 'react'
-import './App.css'
-import ChatMessage from './components/ChatMessage'
-import ChatInput from './components/ChatInput'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import Layout from './components/layout/Layout'
+import Achievements from './components/pages/Achievements'
+import Articles from './components/pages/Articles'
+import Breathing from './components/pages/Breathing'
+import Dashboard from './components/pages/Dashboard'
+import Exercises from './components/pages/Exercises'
+import Grounding from './components/pages/Grounding'
+import Home from './components/pages/Home'
+import Journal from './components/pages/Journal'
+import Moira from './components/pages/Moira'
+import MoodTracker from './components/pages/Moodtracker'
+import Privacy from './components/pages/Privacy'
+import Quizzes from './components/pages/Quizzes'
+import Reminders from './components/pages/Reminders'
+import Resources from './components/pages/Resources'
+import SafetyPlan from './components/pages/SafetyPlan'
+import Videos from './components/pages/Videos'
 
-function App() {
-  const [messages, setMessages] = useState([
-    { id: 1, text: 'Hi! I\'m MindMoor, your AI companion. How can I help you today?', sender: 'bot' }
-  ])
-  const [loading, setLoading] = useState(false)
-  const messagesEndRef = useRef(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const handleSendMessage = async (text) => {
-    // Add user message
-    const userMessage = {
-      id: messages.length + 1,
-      text,
-      sender: 'user'
-    }
-    setMessages(prev => [...prev, userMessage])
-    setLoading(true)
-
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      })
-
-      if (!response.ok) throw new Error('Failed to get response')
-      
-      const data = await response.json()
-      const botMessage = {
-        id: messages.length + 2,
-        text: data.response || 'Sorry, I couldn\'t generate a response.',
-        sender: 'bot'
-      }
-      setMessages(prev => [...prev, botMessage])
-    } catch (error) {
-      console.error('Error:', error)
-      const errorMessage = {
-        id: messages.length + 2,
-        text: 'Sorry, there was an error connecting to the server.',
-        sender: 'bot'
-      }
-      setMessages(prev => [...prev, errorMessage])
-    } finally {
-      setLoading(false)
-    }
-  }
-
+export default function App() {
   return (
-    <div className="app-container">
-      <div className="chat-wrapper">
-        <div className="chat-header">
-          <h1>MindMoor</h1>
-          <p>Your AI Conversational Companion</p>
-        </div>
-        
-        <div className="messages-container">
-          {messages.map(msg => (
-            <ChatMessage key={msg.id} message={msg} />
-          ))}
-          {loading && <div className="loading">MindMoor is thinking...</div>}
-          <div ref={messagesEndRef} />
-        </div>
-        
-        <ChatInput onSendMessage={handleSendMessage} disabled={loading} />
-      </div>
-    </div>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="achievements" element={<Achievements />} />
+        <Route path="reminders" element={<Reminders />} />
+        <Route path="mood" element={<MoodTracker />} />
+        <Route path="journal" element={<Journal />} />
+        <Route path="breathing" element={<Breathing />} />
+        <Route path="exercises" element={<Exercises />} />
+        <Route path="grounding" element={<Grounding />} />
+        <Route path="quizzes" element={<Quizzes />} />
+        <Route path="videos" element={<Videos />} />
+        <Route path="articles" element={<Articles />} />
+        <Route path="moira" element={<Moira />} />
+        <Route path="resources" element={<Resources />} />
+        <Route path="safety-plan" element={<SafetyPlan />} />
+        <Route path="privacy" element={<Privacy />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   )
 }
-
-export default App
