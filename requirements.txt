@@ -1,6 +1,6 @@
 flask==2.3.3
 flask-cors==6.0.0
-python-dotenv==1.0.0
+python-dotenv==1.2.2
 transformers==5.10.1
 torch==2.13.0
 accelerate==0.25.0
