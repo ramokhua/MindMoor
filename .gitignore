@@ -24,7 +24,6 @@ backend/*.egg-info/
 .DS_Store
 Thumbs.db
 
-# --- Testing / Coverage ---
-coverage/
-*.coverage
-*.pytest_cache/
+# Logs
+*.log
+npm-debug.log*
