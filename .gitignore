@@ -1,32 +1,26 @@
-# --- Python backend ---
-.venv*
-venv/
-ENV/
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.dll
-*.so
-*.dylib
-*.log
-*.env
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
 
-# --- Node/React frontend ---
-node_modules/
-dist/
-build/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Backend
+backend/.venv/
+backend/venv/
+backend/.env
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.egg-info/
 
-# --- IDE / Editor ---
+# IDE
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
 
-# --- OS junk ---
+# OS
 .DS_Store
 Thumbs.db
 
@@ -34,6 +28,3 @@ Thumbs.db
 coverage/
 *.coverage
 *.pytest_cache/
-
-# Local Netlify folder
-.netlify

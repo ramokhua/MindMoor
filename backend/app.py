@@ -1,33 +1,52 @@
-"""
-MindMoor Flask Backend
-Serves the fine-tuned HuggingFace model for the Moira chatbot.
-"""
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from flask import Flask
-from flask_cors import CORS
 
 load_dotenv()
 
-def create_app():
-    app = Flask(__name__)
-    CORS(app, origins=["http://localhost:3000", os.getenv("FRONTEND_URL", "*")])
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": os.getenv('FRONTEND_URL', 'http://localhost:3000')}})
 
-    # Register blueprints
-    from routes.chat import chat_bp
-    from routes.health import health_bp
-    from routes.training import training_bp
+# Simple in-memory chat for demo
+chat_history = []
 
-    app.register_blueprint(chat_bp,     url_prefix="/api")
-    app.register_blueprint(health_bp,   url_prefix="/api")
-    app.register_blueprint(training_bp, url_prefix="/api")
+@app.route('/api/health', methods=['GET'])
+def health():
+    return jsonify({"status": "healthy"}), 200
 
-    return app
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    data = request.json
+    user_message = data.get('message', '')
+    
+    if not user_message:
+        return jsonify({"error": "No message provided"}), 400
+    
+    # Store message in history
+    chat_history.append({"role": "user", "content": user_message})
+    
+    # For now, return a simple response
+    # TODO: Integrate with actual model
+    response_text = f"You said: {user_message}. This is a demo response."
+    
+    chat_history.append({"role": "assistant", "content": response_text})
+    
+    return jsonify({
+        "response": response_text,
+        "history_length": len(chat_history)
+    }), 200
 
+@app.route('/api/chat/history', methods=['GET'])
+def get_history():
+    return jsonify({"history": chat_history}), 200
 
-if __name__ == "__main__":
-    app = create_app()
-    port = int(os.getenv("PORT", 5000))
-    debug = os.getenv("FLASK_ENV", "development") == "development"
-    print(f"🧠 MindMoor backend starting on port {port}")
-    app.run(host="0.0.0.0", port=port, debug=debug)
+@app.route('/api/chat/clear', methods=['POST'])
+def clear_history():
+    global chat_history
+    chat_history = []
+    return jsonify({"message": "Chat history cleared"}), 200
+
+if __name__ == '__main__':
+    port = int(os.getenv('PORT', 5000))
+    app.run(debug=os.getenv('FLASK_DEBUG', False), port=port)

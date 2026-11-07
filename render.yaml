@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: mindmoor-backend
+    rootDir: backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT app:app
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: FRONTEND_URL
+        value: https://mindmoor-frontend.onrender.com
+      - key: BASE_MODEL
+        value: facebook/blenderbot-400M-distill
+      - key: MAX_NEW_TOKENS
+        value: "200"
+      - key: MODEL_TEMPERATURE
+        value: "0.75"
+      - key: RATE_LIMIT
+        value: "30"
+      - key: RATE_WINDOW
+        value: "60"
+    healthCheckPath: /api/health
+
+  - type: static
+    name: mindmoor-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://mindmoor-1.onrender.com
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

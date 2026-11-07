@@ -17,7 +17,7 @@ export default function Breathing() {
   const [phaseIdx, setPhaseIdx] = useState(0)
   const [countdown, setCountdown] = useState(0)
   const [cycles, setCycles] = useState(0)
-  const [sessionCount, setSessionCount] = useState(() => 
+  const [sessionCount, setSessionCount] = useState(() =>
     parseInt(localStorage.getItem('breathingSessions') || '0')
   )
 
@@ -66,12 +66,16 @@ export default function Breathing() {
           setCycles(cycleCount)
           
           if (cycleCount === 4) {
-            const newCount = sessionCount + 1
-            setSessionCount(newCount)
-            localStorage.setItem('breathingSessions', newCount.toString())
-            recordAction('breathing')
-            syncAndCheck()
-            stop()
+            const result = saveBreathingOffline({ completedAt: new Date().toISOString() })
+            if (result.success) {
+              setSessionCount(result.data)
+              recordAction('breathing')
+              syncAndCheck()
+            }
+            clearInterval(intervalRef.current)
+            setIsRunning(false)
+            setPhaseIdx(0)
+            setCountdown(0)
             return
           }
         }
