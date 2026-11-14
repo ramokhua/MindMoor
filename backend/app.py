@@ -6,7 +6,16 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": os.getenv('FRONTEND_URL', 'http://localhost:3000')}})
+frontend_origins = list(dict.fromkeys(
+    origin.strip().rstrip('/')
+    for origin in (
+        'http://localhost:3000',
+        'https://mindmoor-frontend.onrender.com',
+        *os.getenv('FRONTEND_URL', '').split(','),
+    )
+    if origin.strip()
+))
+CORS(app, resources={r"/api/*": {"origins": frontend_origins}})
 
 # Simple in-memory chat for demo
 chat_history = []
