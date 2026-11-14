@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import './Moira.css'
 
-const API_URL = '/api/chat'
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+const API_URL = `${API_BASE_URL}/api/chat`
 
 const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'end it all', 'self harm', 'want to die', 'want to end it', 'better off dead']
 
