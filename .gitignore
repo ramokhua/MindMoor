@@ -27,3 +27,24 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Python virtual environments
+.venv/
+.venv*/
+venv/
+env/
+ENV/
+
+# PyTorch and large model files
+*.dll
+*.so
+*.pyd
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+
+# Model folders
+backend/models/
+models/
